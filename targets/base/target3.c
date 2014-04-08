@@ -3,32 +3,31 @@
 #include <string.h>
 
 struct widget_t {
-  double x[T3_WIDGET_NUMDUBS];
-  int count;
-  int delivered;
+    double x[T3_WIDGET_NUMDUBS];
+    int count;
+    int delivered;
 };
 
 #define MAX_WIDGETS T3_MAXWIDGETS
 
 int foo(char *in, int count)
 {
-  struct widget_t buf[MAX_WIDGETS];
+    struct widget_t buf[MAX_WIDGETS];
 
-  if (count < MAX_WIDGETS) 
-    memcpy(buf, in, count * sizeof(struct widget_t));
+    if(count < MAX_WIDGETS) 
+        memcpy(buf, in, count * sizeof(struct widget_t));
 
-  return 0;
+    return 0;
 }
 
 int main(int argc, char *argv[])
 {
-  int count;
-  char *in;
+    int count;
+    char *in;
 
-  if (argc != 2)
-    {
-      fprintf(stderr, "target3: argc != 2\n");
-      exit(EXIT_FAILURE);
+    if(argc != 2) {
+        fprintf(stderr, "target3: argc != 2\n");
+        exit(EXIT_FAILURE);
     }
 
   /*
@@ -40,14 +39,13 @@ int main(int argc, char *argv[])
    *   of struct widget_t
    */
 
-  count = (int)strtoul(argv[1], &in, 10);
-  if (*in != ',')
-    {
-      fprintf(stderr, "target3: argument format is [count],[data]\n");
-      exit(EXIT_FAILURE);
+    count = (int)strtoul(argv[1], &in, 10);
+    if(*in != ',') {
+        fprintf(stderr, "target3: argument format is [count],[data]\n");
+        exit(EXIT_FAILURE);
     }
-  in++;                         /* advance one byte, past the comma */
-  foo(in, count);
+    in++;                         /* advance one byte, past the comma */
+    foo(in, count);
 
-  return 0;
+    return 0;
 }

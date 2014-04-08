@@ -21,71 +21,67 @@ obsd_strlcpy(dst, src, siz)
         const char *src;
         size_t siz;
 {
-        register char *d = dst;
-        register const char *s = src;
-        register size_t n = siz;
+    register char *d = dst;
+    register const char *s = src;
+    register size_t n = siz;
 
-        /* Copy as many bytes as will fit */
-        if (n != 0 && --n != 0) {
-                do {
-                        if ((*d++ = *s++) == 0)
-                                break;
-                } while (--n != 0);
-        }
 
-        /* Not enough room in dst, add NUL and traverse rest of src */
-        if (n == 0) {
-                if (siz != 0)
-                        *d = '\0';              /* NUL-terminate dst */
-                while (*s++)
-                        ;
-        }
+    /* Copy as many bytes as will fit */
+    if(n != 0 && --n != 0) {
+        do {
+            if((*d++ = *s++) == 0)
+                break;
+        } while (--n != 0);
+    }
 
-        return(s - src - 1);    /* count does not include NUL */
+    /* Not enough room in dst, add NUL and traverse rest of src */
+    if(n == 0) {
+        if (siz != 0)
+            *d = '\0';              /* NUL-terminate dst */
+            while (*s++)
+                ;
+    }
+
+    return(s - src - 1);    /* count does not include NUL */
 }
-
 
 
 int foo(char *arg)
 {
-  char *p;
-  char *q;
+    char *p;
+    char *q;
 
-  if ( (p = tmalloc(500)) == NULL)
-    {
-      fprintf(stderr, "tmalloc failure\n");
-      exit(EXIT_FAILURE);
+    if((p = tmalloc(500)) == NULL) {
+        fprintf(stderr, "tmalloc failure\n");
+        exit(EXIT_FAILURE);
     }
-  if ( (q = tmalloc(300)) == NULL)
-    {
-      fprintf(stderr, "tmalloc failure\n");
-      exit(EXIT_FAILURE);
+    if((q = tmalloc(300)) == NULL) {
+        fprintf(stderr, "tmalloc failure\n");
+        exit(EXIT_FAILURE);
     } 
 
-  tfree(p);
-  tfree(q);
+    tfree(p);
+    tfree(q);
   
-  if ( (p = tmalloc(1024)) == NULL)
-    {
-      fprintf(stderr, "tmalloc failure\n");
-      exit(EXIT_FAILURE);
+    if((p = tmalloc(1024)) == NULL) {
+        fprintf(stderr, "tmalloc failure\n");
+        exit(EXIT_FAILURE);
     }
 
-  obsd_strlcpy(p, arg, 1024);
+    obsd_strlcpy(p, arg, 1024);
 
-  tfree(q);
+    tfree(q);
 
-  return 0;
+    return 0;
 }
 
 int main(int argc, char *argv[])
 {
-  if (argc != 2)
-    {
-      fprintf(stderr, "target4: argc != 2\n");
-      exit(EXIT_FAILURE);
+    if(argc != 2) {
+        fprintf(stderr, "target4: argc != 2\n");
+        exit(EXIT_FAILURE);
     }
-  foo(argv[1]);
+    foo(argv[1]);
 
   return 0;
 }
