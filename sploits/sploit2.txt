@@ -1,1 +1,46 @@
-Use this file to explain how your sploit2 works.
+Sploit2
+
+The bug found in the program target2 is very subtle. This program attempts to
+rectify the bug in target1 by implementing it's own version of strcpy
+called 'nstrcpy(out, outl, in)', thus differing from strcpy in that it takes
+in the length of the out (destination) buffer. This does succeed in preventing
+an overflow of the buffer via a search for NUL character but the implementation
+contains a bug. In the for loop that does the actual copying, the condition
+parameter of the loop is i <= len. Because the string and buffer are arrays and
+arrays have their first index at 0 instead of 1, a for loop should always
+iterate to the length of the array minus one to account for the index starting
+at 0. Thus by looping while i <= len, there is an off by one error here that
+will cause nstrcpy to always copy an extra byte to the end of the out buffer.
+
+Using this bug we are able to write an exploit using exactly the same procedure
+from sploit1 with a slight difference. In target2.c, bar creates a buffer
+called buf of length 200. This means we need to create an attack string of 201
+characters (plus an extra character for a NUL but it's not actually needed
+for this specific attack, but it allows the attack to also work if strcpy were
+used). We create the attack string as before, setting each word to the address
+of the attack string, padding the top half with NOPs and then copying our
+shellcode into the center. Then we set the byte right before the NUL character,
+the 201st byte which is the one byte of overflow we can get from this bug, to
+a value I shall explain in a moment.
+
+The way this byte allows us to change the execution of target2 is that in
+the stack, the array buf will occur right before the saved frame pointer and
+the saved return address. In target1 we overwrote the return address directly.
+We don't have enough bytes of overflow to overwrite the return address, but we
+are able to change the last byte of the saved frame pointer. Because the value
+of the saved frame pointer is an address that is found just below the the
+address space for buf, the saved frame pointer address only differs from parts
+of buf's address range by 1 byte. For this program specifically, the value
+of the saved frame pointer is 0xbffffdd8 and the range of buf is
+0xbffffd5d - 0xbffffdcc. The last values of buf have 0xbffffd** in common with
+the saved frame pointer. Thus by modifying the last byte of the saved frame
+pointer, we are able to change it to an address in buf. Because the end of buf
+is filled with the address of our attack string, when we change the saved
+frame pointer to an address in buf, and bar returns to foo, foo will have
+it's frame pointer pointing inside buf. And now from foo's new point of view,
+the address it knows to be the location it should be returning to in main has
+been replaced by the address of our attack string.
+
+Thus foo will return to where the attack string is, execution will fall down
+the NOPs to the shell code and a root shell will be opened.
+

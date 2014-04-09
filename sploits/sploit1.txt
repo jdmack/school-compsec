@@ -1,1 +1,35 @@
-Use this file to explain how your sploit1 works.
+Sploit1
+
+The bug found in the program target1.c is the use of the library function
+'strcpy(dest, src)' which copies characters from the src character array to the
+dest character array. The problem with strcpy is that it is not provided any
+information about how long the src character array is and thus blindly relies
+on the C convention that strings (implemented as character arrays) are
+terminated with a NUL character ('\0'). As such, it is possible to provide
+strcpy with a src array that is longer than the destination array (also called
+a buffer).
+
+Using this fact, we are able to use our understanding of the memory stack and
+calling conventions to overflow the destination buffer in such a way that the
+return address of function 'foo' gets overwritten by the overflowing of the
+'buf' array. The return address is located 8 bytes below buf on the stack.
+
+Thus my solution writes an attack string of length 148 bytes and fills it with
+the address of where the attack string will be stored in memory. Then it pads
+the first half of this string with NOPs and then copies our shellcode into the
+center of the attack string. Finally, the last byte of the attack string is set
+to NUL to signal strcpy to cease copying.
+
+So when strcpy copies my attack string into buf, it will copy until it finds a
+NUL character thus overflowing buf and overwriting the return address of foo
+and replacing it with the address of the attack string. This means that when
+strcpy returns to bar, bar will then return to foo. When foo tries to return,
+it will no longer return to main as it was supposed to but will send execution
+to the address of the attack string. The first part of the attack string is
+filled with NOPs, thus sliding execution down memory and it will eventually hit
+the shellcode and execute the shell code, spawning a root shell due to target1
+having setuid to root.
+
+TLDR: The bug exploited is strcpy's dependence on NUL-terminated strings to
+indicate how many bytes to copy.
+
