@@ -58,5 +58,5 @@ int main(void)
         fprintf(stderr, "execve failed.\n");
     }
 
-  return 0;
+    return 0;
 }
