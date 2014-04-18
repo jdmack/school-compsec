@@ -1,1 +1,50 @@
-Use this file to explain how your sploit3 works.
+Sploit3
+
+The bug found in target3.c has to do with the condition controlling the
+execution of the memcpy command. This condition is that count is less than the
+maximum number of widgets allowed, count being the number of widgets to copy
+from in into buf. This is exploitable because in the actual memcpy call, the
+number of bytes passed to copy is actually count multiplied by the size of the
+widget struct. Due to count being an int, which is only 32 bits, it is possible
+to have a very large negative number, that is less than the maximum number of
+widgets (because it is negative) but that when multiplied by the size of the
+widget struct, integer overflow occurs that actually makes the resulting
+number positive. Not only is it positive, but it can also then be larger than
+size of the buffer.
+
+The size of the buffer is the maximum number of widgets multiplied by the
+size of the widget (659 * 32) which is 21088. Thus we need to determine a
+number that is negative but when multiplied by 32, overflows to become large
+enough to hold the attack string passed into target3.
+
+The attack string is constructed exactly as before except with a minor change
+for the format expected by target3 for it's input parameter. The attack
+string needs to be large enough to be the maximum number of bytes, 21088
+bytes, with additional room to account for the count parameter and comma
+character that are expected at the front of the string by target3, and
+then a few additional bytes for the space on the stack between the end of
+buf and the saved values for ebp and eip, and then an additional 8 bytes
+to overwrite the saved ebp and eip. Thus, we need it to be 21132 I fill the 
+entire attack string with the address of buf on the stack inside target3's 
+foo, then pad the first half of the string with nops, then copy in the
+shellcode we wish to execute. Then I add the determined value for count (
+explained below), the comma character, and then null terminate the string.
+
+The value of count selected needs to be a a large negative number such that
+when multiplied by 32, it becomes a number that is at least 21100 but not so 
+large that the program crashes for attempting to write/access an invalid 
+address. The number -2147482988 meets this requirement as it is negative and 
+thus passing the condition of being less than the maximum number of widgets 
+(659) but when it's multiplied by 32, integer overflow occurs and results 
+in 21120.
+
+Thus, when the attack string is passed in, -2147482988 is removed from the
+front of the string (as well as the comma character) and set to count. When
+foo is called, it checks that count is less than 659, which is true because
+-2147482988 is less than 659. Then in the memcpy call, it multiplies
+-214782647 by 32 which results in 21120 after the integer overflow, which
+means that 21120 bytes are written from in (our attack string) into buf which
+is only 21088 long. Thus memcpy overwrite ebp, eip and the bytes inbetween
+them and buf. Then, when foo returns, it returns to the address we supplied
+which is the address of buf. It slides down the NOP sled to the shell code,
+executes the shellcode which launches our root shell.
