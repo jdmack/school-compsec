@@ -1,1 +1,81 @@
-Use this file to explain how your sploit5 works.
+Sploit5
+
+The bug exploited in target5.c is a typical formatted string vulnerability,
+or at least a straight forward one. The bug arises from the innate behavior
+of this family of functions where functions take an unspecified number of
+parameters after the format string and this number is only controlled by the
+format string itself. Since target5.c has a call to a formatted string
+function with unfiltered user input being passed into the function, we are
+able to perform an exploit very similar to a buffer overflow.
+
+Because the function being used is snprintf (which prevents writing more than
+the specified number of bytes), we are unable to directly overflow buf to
+rewrite eip or ebp. The key lies in using the %n format character which
+writes the number of bytes printed to the address specified with it's
+corresponding parameter to the function. Combining this with the ability to
+move the stack pointer (internal stack pointer for the string format function)
+around as much as we'd like, we are able to write a new address to the saved
+eip.
+
+To begin with, we are going to have a 400 byte attack string. This string
+will contain string format characters that will allow us to exploit the
+program. The starting point is to have a %n, which is what will do the
+writing for us. There are two things we need with this: an address to write
+to and a number to write to that address. For the address to write to, we
+will simply put the chosen address at the front of our attack string which
+means it will be located at the address of buf. We then need to get internal
+stack pointer to point at this location when it reads the %n. The way the
+stack is setup for formatted string functions is that first the format string
+is pushed onto the stack and then the corresponding parameters are pushed
+onto the stack. Everytime a format character is read, the stack pointer is
+moved. Thus we need to add the proper amount of format characters to move the
+stack pointer to point to the beginning of the format string. Then, when it's
+in the proper position, when the %n is read, it will use the address at the
+front of the format string that we inserted. For this particular exploit,
+only a single format character was required to point the stack pointer to the
+front of buf.
+
+The next thing to determine is what this address should be. Well what it
+should be is the memory address of the saved eip. Using that address, %n will
+overwrite the saved eip which means when the function returns, it will return
+to whatever value we write to that location.
+
+The remaining item is to determine what %n should write to that memory
+location. We will construct our attack string in the same way as the previous
+exploits, with the address on the front, then a series of nops leading to the
+our shellcode and at the end will be the actual format string with a NUL
+terminator. Therefore we need to get %n to write an address that points to
+somewhere in the nops of our attack string so that execution will slide down
+to our shellcode. The way this occurs is by tweaking the number of bytes that
+have been written by the string format function. This can be accomplished
+with the %nu format character which prints n characters. Thus we want to find
+a value of n that will result in our address being written. The address of
+buf and arg (the two places containing our shellcode in memory) is too large
+to use %nu for the entire address. But we can use %nu to write the top 3
+bytes of the address. This requires that whatever address is currently stored
+in the saved eip location, it's least significant byte needs to be in the
+range of either buf or arg. It is not in the range of buf, but it is in the
+range of arg. In this case, the eip is saved at 0xbffffcbc and has a value of
+0x080484d4. Thus the d4 will be the leftover byte and the rnage of arg is
+0xbffffe5f to bfffffef which contains d4. Thus we just need to select a value
+of n that will result in the top 3 bytes of this address, bffffe. Such a
+number is 12582523 which I mainly found through trial and error because it
+took forever for me to realize that all my numbers were off by 387 when I
+tried converting the hex address to decimal and not getting the result I
+expected because I forgot to account for the characters already existing in
+the attack string, which do count towards the %n value.
+
+The last thing is that because the entire address isn't going to be written
+by %n, it needs to be shifted over 1 byte, so instead of writing to 0xbffffcbc
+, we'll actually be writing to 0xbffffcbd, which is the address we put at the
+front of our attack string.
+
+Thus when the snprintf function is called, it reads in our attack string,
+finds %12582523u which moves the stack pointer and prints a lot of stuff,
+then it finds the %n, so it grabs the corresponding address paramter off the
+stack which points to the top 3 bytes of the saved eip location and then
+writes the number of bytes printed thus far which results in an address
+inside arg. Then when the function returns, it loads this address into eip,
+execution goes into arg, slides down the nops and executes our shell code
+spawning a root shell.
+
