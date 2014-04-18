@@ -1,1 +1,8 @@
-Use this file to explain how your sploit4 works.
+Sploit 4
+
+The bug in this code is essentially that tfree is called on memory that has already been freed after a strcpy function is performed. tmalloc keeps tracks of chunks of memory in a list with each chunk having a pointer to the chunk to its left and a pointer to the chunk on its right. When a node is free()'d, the pointers are adjusted so that the chain is maintained.
+
+What we do is setup an attack string that will mimic the structure of a chunk that will then be written over p by the strlcpy function. Because p and q were malloced and then freed and then p was remalloced to a larger size, q (though it has been free()'d) still points to address it was malloced to which is now inside of p's new range.
+
+Thus when we copy our attack string into p, we have the mimicked chunk structure setup so that when q is free()'d again, the code in tfree() will overwrite the saved eip with the address of our attack string. An important note is that in the fake chunk setup in our attack string, we need to have a value stored in the placeholder for "right" so that it passed the conditions of being not null and having it's freebit set so that the code will execute. But this is also going to be executed when eip is overwritten with our attack string's address, we put a jump 3 in the "left" placeholder so the fake right isn't executed and nops can safetly take execution down to our shellcode stored between the fake right and the start address of q.
+
