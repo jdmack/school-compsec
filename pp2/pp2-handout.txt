@@ -1,0 +1,112 @@
+PP2: Heap Spray
+
+Due
+---
+Tuesday, May 13th, 2014, 11:59PM PST
+
+
+Project Design
+--------------
+For this assignment you will write an exploit against the CMDB (C Movie
+DataBase) binary. The goal as before is to launch a shell by exploiting bugs in
+the target. Unlike before, the stack is non-executable, so you will need to store
+your shellcode somewhere besides the stack! 
+Additionally, you will need to write/modify a tool to launch this exploit.
+Finally, there will be a live server that you will need to attack and gain a 
+shell on to receive full credit.
+
+
+Contents
+--------
+This handout contains a Makefile for generating your version of CMDB, the source
+code to CMDB, this handout readme, a python script to help you launch and develop
+your exploits, and a local testing wrapper.
+Files worth reading: cmdb.c cmdb_generate.c sploit.py
+
+
+Requirements
+------------
+You must handin the following:
+1) A working heap spray exploit python script ("sploit.py")
+2) A filled out "SID" file. Format as before: "SID Last,First"
+3) A filled out "key" file, with your key from the server
+4) A writeup ("writeup.txt") explaining how your exploit works and any details
+
+Some of you may notice there is another way to exploit CMDB. If you write 
+additional exploits please include it as "sploit2.py" and explain how it works
+in the writeup. Additional exploits past the heap spray are worth extra credit. 
+
+Your primary handin *must* be a working heap spray.
+
+If you are working in a group, the FIRST SID in the SID file must be the SID for 
+the key you recovered.
+
+
+Getting the key
+---------------
+When the server goes up (watch Piazza for an announcement about this) you will
+need to attack this server and gain a unique key paired with your SID! We will
+release the machine IP/name at that time, and your port number will be your
+gradesource secret number prepended with a 1. So if your gradesource secret was
+"0463" and the machine name was "attackme.com" then you would change your sploit
+to target "attackme.com" on port "10463". This port will be running the version
+of CMDB you must attack.
+
+Once you gain a shell on this machine, there will be a file named "key" that you
+will need to read and include in your turn in. Please do not port scan or
+otherwise mess with the server. If you are having any issues with connecting,
+wait 5 minutes, and if you are still having issues contact a TA.
+
+
+Testing Locally
+---------------
+As before, we have provided tools for working with and debugging your exploit.
+If you run 'cmdb' directly, you can interact with it via the command line and
+watch its behavior. Running 'test_local' with a port number will let you run you
+exploit script against cmdb. 'test_local' takes a port number as an argument,
+you can use any port number you want while testing locally, but remember to
+switch your sploit.py script to the correct port # when attacking the server, or
+your attack probably won't work!
+
+You can debug your exploit by running 'test_local' under gdb. You may need to
+tweak your exploit script while debugging so that reads don't time out.
+
+Remember to use 'make install' and then 'gdb -e test_local -s /tmp/cmdb'.
+
+
+Handin
+------
+We've provided a handin script, which will package up your solution and FTP it
+over to our server. It will confirm to you that the file has been uploaded. If
+it cannot find any of the required files (sploit.py SID, writeup.txt, key) it
+will refuse to upload. If you upload a new solution, we store both and will
+grade the last one uploaded.
+
+Do not manually FTP files to the server, if they are not correctly named our
+grading will ignore them. Downloading has been disabled. 
+
+
+Hints
+-----
+* If in a group, remember to use the same SID file!
+* Read material on heap sprays.
+* Read all of cmdb.c and cmdb_generate.c
+* Use the utility functions in sploit.py, but feel free to change them.
+* Spend some time working with how data gets stored in the heap for CMDB via gdb.
+* Try working with the binary directly if you want.
+* Test your entire exploit locally! Make a file named key, and access it.
+
+
+Notes
+-----
+* Don't attack the server via anything but the cmdb binary running on your port.
+* Don't DDOS the server.
+* Your exploit does not need to land every time it runs.
+* Try to make it land as often as you can though.
+* You can entirely re-write sploit.py if you want, you are not required to use any
+of the utility functions in it
+* You can work on, and develop your exploit on, pretty much any linux/mac
+machine you want. If you are having issues, you can use the VM from pp1,
+or the Ubuntu VM we have uploaded.
+* It is not required that you make this work on any particular VM, only that you
+are able to retrieve your key when the server goes up.
