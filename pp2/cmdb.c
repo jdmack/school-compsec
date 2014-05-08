@@ -8,7 +8,7 @@ void cmd_review();
 void cmd_delete();
 void handle_commands();
 
-int main(int argc,char* argv[])
+int main(int argc, char* argv[])
 {
     // Fix stdout's behavior on non ttys
     setbuf(stdout, NULL);
@@ -23,6 +23,7 @@ int main(int argc,char* argv[])
 
 void handle_commands()
 {
+    // Think we can buffer overflow this, but the while loop never ends
     char command[16];
   
     // Ask for commands and run them forever
@@ -133,7 +134,7 @@ void cmd_delete()
 }
 
 // Utility function, since c getline doesn't do what we want, and readline is big
-size_t get_line(char* buffer,size_t max)
+size_t get_line(char* buffer, size_t max)
 {
     char c;
     size_t count = 0;
@@ -145,7 +146,8 @@ size_t get_line(char* buffer,size_t max)
 	            break;
         }
         else
-        count++;
+            count++;
     } while(count < max);
+
     return count;
 }
