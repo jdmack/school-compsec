@@ -26,7 +26,7 @@ void handle_commands()
     char command[16];
   
     // Ask for commands and run them forever
-    while(1){
+    while(1) {
         puts("Command?\na:Add Movie\nr:Review Movie\nd:Delete Movie\n");
         get_line(command,16);
         switch (command[0]) {
