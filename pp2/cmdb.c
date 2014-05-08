@@ -46,7 +46,7 @@ void cmd_add()
     if(ce_count >= MAX_ENTRIES) {
         puts("Database is full. (Maybe delete some bad movies?)\n");
         return;
-  }
+    }
 
     struct cmdb_entry* ce = malloc(sizeof(struct cmdb_entry));
 
