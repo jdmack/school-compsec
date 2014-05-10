@@ -6,7 +6,6 @@ cmdb.c will indicate ways to handle the data better if the cmdb app is slow at p
 
 5 minute connection timeout to key server
 
-key isight for extra credit, what is ASLR? when cmdb is loaded into memory with ASLR, not everything is randomized. FIgure out what is not randomized and figure out how to use it.
 
 short jump: EB (then a value between 00 and 7f)
     - /xeb/x01
@@ -42,4 +41,12 @@ Composer[300];
 
 
 
+EXTRA CREDIT
+key insight for extra credit, what is ASLR? when cmdb is loaded into memory with ASLR, not everything is randomized. FIgure out what is not randomized and figure out how to use it.
 
+Idea:
+return to libc attack
+system: 0xb7e60430
+set return address to system
+try doing it with the address for environment variable SHELL and see if it works
+0xbffffe2c:

