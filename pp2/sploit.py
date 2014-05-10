@@ -1,7 +1,9 @@
 #!/usr/bin/python
+
 from sock import *
 import sys
 import time
+
 ################################################################
 # Skeleton exploit for use                                     #
 # Uses a nice socket library (https://github.com/hellman/sock/)#
