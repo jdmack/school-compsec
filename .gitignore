@@ -3,3 +3,4 @@
 cmdb
 test_local
 *.o
+*.swp
