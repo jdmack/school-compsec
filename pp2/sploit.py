@@ -210,9 +210,9 @@ con = connect()
 pause_script()
 
 # Send the movie
-movie = build_movie()
-send_movie(hacker, con)
+#movie = build_movie()
+#send_movie(hacker, con)
 
 # Create reviews to amplify the spray
 
-hijack_execution(con)
+#hijack_execution(con)

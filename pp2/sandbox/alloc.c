@@ -1,13 +1,14 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include "../cmdb_struct.h"
 
-#define NUM_OF_LOOPS 10000
+#define NUM_OF_LOOPS 100
 
 int main(int argc, char* argv[])
 {
-    int i = 0;
+    //int i = 0;
 
-    int * ptr = malloc(sizeof(int));
+    int * ptr = malloc(sizeof(struct cmdb_entry));
     printf("%p\n", ptr);
 
     /*
