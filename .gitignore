@@ -5,3 +5,5 @@ test_local
 *.o
 *.swp
 a.out
+alloc
+system
