@@ -23,7 +23,6 @@ int main(int argc, char* argv[])
 
 void handle_commands()
 {
-    // Think we can buffer overflow this, but the while loop never ends
     char command[16];
   
     // Ask for commands and run them forever
