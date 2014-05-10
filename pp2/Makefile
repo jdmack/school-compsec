@@ -27,6 +27,9 @@ clean:
 
 install:
 	$(CP) cmdb /tmp/
+
+python:
+	python -m py_compile sploit.py
 #dependencies
 install: cmdb
 cmdb: cmdb_generate.o

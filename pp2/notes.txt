@@ -1,0 +1,45 @@
+Do a loop of malloc calls and print the address you've given on a regular linux box
+Look at the addresses
+
+
+cmdb.c will indicate ways to handle the data better if the cmdb app is slow at processing the data being sent
+
+5 minute connection timeout to key server
+
+key isight for extra credit, what is ASLR? when cmdb is loaded into memory with ASLR, not everything is randomized. FIgure out what is not randomized and figure out how to use it.
+
+short jump: EB (then a value between 00 and 7f)
+    - /xeb/x01
+
+bug in reivew that will let you duplicate data you send
+
+
+normal fields
+-----------------
+Title[500];
+Writer[300];
+Star_1[300];
+Star_4[300];
+Star_5[300];
+Country[30];
+Average_Rating[3];
+
+permutated fields
+-----------------
+Star_3[300];
+Summary[2000];
+
+xor'ed fields
+-----------------
+Director[300];
+Star_2[300];
+Budget[80];
+Opening_Weekend[80];
+Gross[80];
+Runtime[80];
+Aspect[40];
+Composer[300];
+
+
+
+
