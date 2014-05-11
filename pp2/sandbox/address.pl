@@ -1,9 +1,12 @@
 #!/usr/bin/perl
 
+my $COUNT = 1000;
+
 my %addresses = ();
+my @addresses = ();
 
 # Collect addresses from alloc
-for(my $i = 0; $i < 100; $i++) {
+for(my $i = 0; $i < $COUNT; $i++) {
 
     my $address = `alloc`;
     chomp($address);
@@ -14,13 +17,19 @@ for(my $i = 0; $i < 100; $i++) {
     else {
         $addresses{$address} = 1;
     }
+    push(@addresses, $address);
 }
+sort @addresses;
+my $numOfAddresses = @addresses;
+print "$numOfAddresses\n";
+print "$addresses[$numOfAddresses / 2]\n";
+#print_address_hash(%addresses);
 
-my %subaddresses_2 = sub_address(\%addresses, 2);
-print_address_hash(%subaddresses_2);
+#my %subaddresses_2 = sub_address(\%addresses, 2);
+#print_address_hash(%subaddresses_2);
 
-my %subaddresses_3 = sub_address(\%addresses, 3);
-print_address_hash(%subaddresses_3);
+#my %subaddresses_3 = sub_address(\%addresses, 3);
+#print_address_hash(%subaddresses_3);
 
 ################################################################################
 #   sub_address

