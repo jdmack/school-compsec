@@ -17,24 +17,24 @@ short jump: EB (then a value between 00 and 7f)
 
 normal fields
 -----------------
-Title[500];
-Writer[300];
-Star_1[300];
-Star_4[300];
-Star_5[300];
-Country[30];
-Average_Rating[3];
+Title[500];         - works
+Writer[300];        - works
+Star_1[300];        - works
+Star_4[300];        - works
+Star_5[300];        - works
+Country[30];        - works
+Average_Rating[3];  - works
 
 permutated fields
 -----------------
-Star_3[300];
-Summary[2000];
+Star_3[300];        - works
+Summary[2000];      - works
 
 xor'ed fields
 -----------------
-Director[300];
-Star_2[300];
-Budget[80];
+Director[300];      - works
+Star_2[300];        - works
+Budget[80];         - works
 Opening_Weekend[80];
 Gross[80];
 Runtime[80];

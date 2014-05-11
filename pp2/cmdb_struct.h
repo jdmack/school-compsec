@@ -12,7 +12,7 @@ char Star_5[300];
 char Summary[2000];
 char Country[30];
 char Budget[80];
-char Opening_Weekend[80];
+char Opening_Weekend[80];       // broken
 char Gross[80];
 char Runtime[80];
 char Aspect[40];
