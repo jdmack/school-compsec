@@ -311,6 +311,50 @@ def build_movie():
 
 ################################################################################
 #
+#   undo_xor
+#
+################################################################################
+def undo_xor(field, field_len, xor_key, xor_key_len):
+
+    if (field_len % xor_key_len != 0):
+        print "undo_xor error"
+        return
+
+    for keyItr in range (0,  field_len / xor_key_len):
+        base = keyItr * xor_key_len;
+        for index in range (0, xor_key_len):
+            field[base + index] = field[base+index] ^ xor_key[index]
+    return field
+
+
+################################################################################
+#
+#   undo_permute
+#
+################################################################################
+def undo_permute(field, fieldLen, perm, permLen):
+
+    tmp = [0 for i in range(permLen)]
+
+    if(fieldLen % permLen != 0):
+        print "undo_permute error"
+        return
+    for permItr in range( 0,fieldLen / permLen):
+        base = permItr * permLen
+
+        #copy into tmp
+        for index in range(0,permLen):
+            tmp[perm[index]] = field[index]
+
+        #copy back into field
+        for index2 in range(0,permLen):
+            field[base+index2] = tmp[index2]
+    return field
+
+
+
+################################################################################
+#
 #   Main
 #
 ################################################################################
