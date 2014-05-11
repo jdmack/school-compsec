@@ -8,103 +8,103 @@ void new_entry(struct cmdb_entry* ce)
 
     puts("Title?\n");
     rd = get_line(tmp, 500);
-    fprintf(stderr, "title rd: %d\n", rd);
+    //fprintf(stderr, "title rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 500 - rd);
     memcpy(&(ce->Title), tmp, 500);
     
     puts("Director?\n");
     rd = get_line(tmp, 300);
-    fprintf(stderr, "director rd: %d\n", rd);
+    //fprintf(stderr, "director rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 300 - rd);
     memcpy(&(ce->Director), tmp, 300);
     
     puts("Writer?\n");
     rd = get_line(tmp, 300);
-    fprintf(stderr, "writer rd: %d\n", rd);
+    //fprintf(stderr, "writer rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 300 - rd);
     memcpy(&(ce->Writer), tmp, 300);
 
     puts("Star_1?\n");
     rd = get_line(tmp, 300);
-    fprintf(stderr, "star1 rd: %d\n", rd);
+    //fprintf(stderr, "star1 rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 300 - rd);
     memcpy(&(ce->Star_1), tmp, 300);
 
     puts("Star_2?\n");
     rd = get_line(tmp, 300);
-    fprintf(stderr, "star2 rd: %d\n", rd);
+    //fprintf(stderr, "star2 rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 300 - rd);
     memcpy(&(ce->Star_2), tmp, 300);
 
     puts("Star_3?\n");
     rd = get_line(tmp, 300);
-    fprintf(stderr, "star3 rd: %d\n", rd);
+    //fprintf(stderr, "star3 rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 300 - rd);
     memcpy(&(ce->Star_3), tmp, 300);
 
     puts("Star_4?\n");
     rd = get_line(tmp, 300);
-    fprintf(stderr, "star4 rd: %d\n", rd);
+    //fprintf(stderr, "star4 rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 300 - rd);
     memcpy(&(ce->Star_4), tmp, 300);
 
     puts("Star_5?\n");
     rd = get_line(tmp, 300);
-    fprintf(stderr, "star5 rd: %d\n", rd);
+    //fprintf(stderr, "star5 rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 300 - rd);
     memcpy(&(ce->Star_5), tmp, 300);
 
     puts("Summary?\n");
     rd = get_line(tmp, 2000);
-    fprintf(stderr, "summary rd: %d\n", rd);
+    //fprintf(stderr, "summary rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 2000 - rd);
     memcpy(&(ce->Summary), tmp, 2000);
 
     puts("Country?\n");
     rd = get_line(tmp, 30);
-    fprintf(stderr, "countruy rd: %d\n", rd);
+    //fprintf(stderr, "countruy rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 30 - rd);
     memcpy(&(ce->Country), tmp, 30);
 
     puts("Budget?\n");
     rd = get_line(tmp, 80);
-    fprintf(stderr, "budget rd: %d\n", rd);
+    //fprintf(stderr, "budget rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 80 - rd);
     memcpy(&(ce->Budget), tmp, 80);
 
     puts("Opening_Weekend?\n");
     rd = get_line(tmp, 80);
-    fprintf(stderr, "opening_weekend rd: %d\n", rd);
+    //fprintf(stderr, "opening_weekend rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 80 - rd);
     memcpy(&(ce->Opening_Weekend), tmp, 80);
 
     puts("Gross?\n");
     rd = get_line(tmp, 80);
-    fprintf(stderr, "gross rd: %d\n", rd);
+    //fprintf(stderr, "gross rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 80 - rd);
     memcpy(&(ce->Gross), tmp, 80);
 
     puts("Runtime?\n");
     rd = get_line(tmp, 80);
-    fprintf(stderr, "runtime rd: %d\n", rd);
+    //fprintf(stderr, "runtime rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 80 - rd);
     memcpy(&(ce->Runtime), tmp, 80);
 
     puts("Aspect?\n");
     rd = get_line(tmp, 40);
-    fprintf(stderr, "aspect rd: %d\n", rd);
+    //fprintf(stderr, "aspect rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 40 - rd);
     memcpy(&(ce->Aspect), tmp, 40);
 
     puts("Composer?\n");
     rd = get_line(tmp, 300);
-    fprintf(stderr, "composer rd: %d\n", rd);
+    //fprintf(stderr, "composer rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 300 - rd);
     memcpy(&(ce->Composer), tmp, 300);
 
     puts("Average_Rating?\n");
     rd = get_line(tmp, 3);
-    fprintf(stderr, "average_rating rd: %d\n", rd);
+    //fprintf(stderr, "average_rating rd: %d\n", rd);
     memset(&(tmp[rd]), '\0', 3 - rd);
     memcpy(&(ce->Average_Rating), tmp, 3);
   

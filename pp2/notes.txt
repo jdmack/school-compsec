@@ -1,5 +1,9 @@
-Do a loop of malloc calls and print the address you've given on a regular linux box
-Look at the addresses
+TODO
+-----
+- hijack_execution function
+- heap address
+- fail recovery
+
 
 
 cmdb.c will indicate ways to handle the data better if the cmdb app is slow at processing the data being sent
@@ -9,8 +13,6 @@ cmdb.c will indicate ways to handle the data better if the cmdb app is slow at p
 
 short jump: EB (then a value between 00 and 7f)
     - /xeb/x01
-
-bug in reivew that will let you duplicate data you send
 
 
 normal fields

