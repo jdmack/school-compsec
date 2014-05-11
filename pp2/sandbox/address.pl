@@ -10,6 +10,7 @@ for(my $i = 0; $i < $COUNT; $i++) {
 
     my $address = `alloc`;
     chomp($address);
+    print "$address\n";
 
     if(exists $address{$address}) {
         $addresses{$address}++;

