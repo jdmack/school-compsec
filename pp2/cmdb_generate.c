@@ -91,36 +91,34 @@ void new_entry(struct cmdb_entry* ce){
 
 
   
-  char keyDirector[300] = "\x49\xcc\x75\xd2\xd3\x25\xec\xd2\x3a\xc6";
-  xor_field(ce->Director, 300, keyDirector, 10);
-  int permWriter[300] = {1, 2, 0};
-  permute_field(ce->Writer, 300, permWriter, 3);
-  int permStar_1[300] = {4, 8, 9, 21, 24, 19, 0, 25, 15, 23, 12, 10, 14, 13, 1, 3, 20, 11, 2, 28, 22, 27, 6, 26, 16, 18, 5, 29, 7, 17};
-  permute_field(ce->Star_1, 300, permStar_1, 30);
-  int permStar_2[300] = {52, 39, 8, 58, 40, 17, 44, 50, 14, 22, 11, 12, 34, 31, 15, 42, 37, 13, 0, 36, 35, 30, 33, 26, 56, 7, 43, 38, 19, 28, 48, 49, 1, 4, 2, 23, 57, 25, 18, 53, 21, 9, 59, 54, 20, 6, 46, 27, 10, 5, 55, 51, 47, 24, 16, 3, 32, 41, 45, 29};
+  
+  char keyWriter[300] = "\xd7\xe2\xb8\x4a\x68\x9d\x7c\xd4\xe7\x66\x79\xd3";
+  xor_field(ce->Writer, 300, keyWriter, 12);
+  char keyStar_1[300] = "\xcf\xe2\x6f\x57\xdb";
+  xor_field(ce->Star_1, 300, keyStar_1, 5);
+  int permStar_2[300] = {43, 0, 57, 17, 2, 40, 52, 18, 50, 8, 22, 11, 9, 19, 47, 35, 59, 30, 32, 49, 41, 25, 4, 42, 38, 10, 45, 34, 14, 51, 7, 6, 37, 36, 16, 39, 44, 1, 3, 5, 21, 26, 48, 28, 29, 15, 46, 54, 23, 31, 33, 13, 27, 12, 58, 55, 53, 24, 56, 20};
   permute_field(ce->Star_2, 300, permStar_2, 60);
-  char keyStar_3[300] = "\xea\xa6\x08\xa6\x03\x99\x99\x65\x49\x2d\x4a\x83\x32\xad\x8b\xbb\xee\xb8\xde\xc1\xab\x2a\xee\x25\x34\xde\x02\xa0\x7b\x56\x61\x02\x33\x40\xe9\x1c\x5a\x78\x05\xb1\xf6\xa8\x67\xd7\xda\xc4\x03\xe7\x71\xfe";
-  xor_field(ce->Star_3, 300, keyStar_3, 50);
+  char keyStar_3[300] = "\x86";
+  xor_field(ce->Star_3, 300, keyStar_3, 1);
   
-  char keyStar_5[300] = "\x96\xd6\x5d\x36\x24\x8e\x8c\xa1\x35\x91\x68\x9c\xcd\x26\x3c\xe5\x82\x67\x03\x00\xf5\xdb\xfb\x62\x5f\x9d\x2d\xb0\x99\x0e\x33\x2b\xf4\xde\x88\x5f\x46\x75\xd3\x02\x03\xb4\xeb\x04\x3a\x3c\xe6\x28\x00\xa6\xce\xa9\x9c\x34\x51\x11\x01\x3f\xa2\x0f\x02\xd6\x1b\xec\xb0\x75\x85\x7b\x02\x01\x8e\x28\x82\xdf\xc6\xbb\xb8\x85\x1a\xff\x6a\xec\x6d\x33\x3e\x66\xde\x44\x62\x2d\xc8\x10\x58\x47\xac\x7b\x0e\x53\x9f\x12";
-  xor_field(ce->Star_5, 300, keyStar_5, 100);
-  char keySummary[2000] = "\x82\xfc\x5d\x9d\x5d\xc4\xfe\xe6\xa9\xb6\x98\x35\xfb\x02\x28\xe8\x9a\xc9\x64\x91\x86\x32\x02\x1d\x3c\xe0\xe7\x57\x1a\xaf\x73\x1a\xc6\x45\x55\xa3\x25\x09\xbd\xd0\x2c\xa2\x9c\x12\x2b\x25\x14\x7f\x7a\x96\x85\x9c\xd0\x7c\xa5\x4c\xdc\x36\x7d\x36\x62\x98\xd5\xe5\xbe\x30\x8e\xe3\x11\x03\xdb\x36\x01\xe9\xb5\xc9\x19\x8c\x64\x64";
-  xor_field(ce->Summary, 2000, keySummary, 80);
-  int permCountry[30] = {1, 0, 2};
-  permute_field(ce->Country, 30, permCountry, 3);
-  int permBudget[80] = {1, 0};
-  permute_field(ce->Budget, 80, permBudget, 2);
-  int permOpening_Weekend[80] = {6, 38, 0, 39, 20, 28, 25, 10, 24, 7, 31, 36, 29, 22, 13, 16, 19, 8, 35, 1, 34, 17, 26, 21, 14, 18, 2, 12, 27, 23, 4, 3, 9, 5, 11, 33, 15, 37, 32, 30};
-  permute_field(ce->Opening_Weekend, 80, permOpening_Weekend, 40);
+  char keyStar_5[300] = "\x69\x1e\x61\x48\x92\x98\x19\xd0\x5f\xce\x14\x50\xe5\x74\xc6\xea\x7c\x8b\x8f\x15";
+  xor_field(ce->Star_5, 300, keyStar_5, 20);
+  int permSummary[2000] = {191, 241, 120, 1, 344, 351, 309, 236, 369, 261, 183, 121, 210, 116, 28, 75, 314, 234, 287, 171, 305, 289, 276, 122, 97, 395, 3, 382, 390, 318, 212, 259, 153, 211, 213, 2, 269, 21, 154, 96, 398, 319, 358, 50, 337, 160, 105, 229, 196, 278, 224, 383, 48, 137, 155, 80, 130, 119, 237, 175, 248, 376, 340, 399, 223, 312, 238, 325, 17, 38, 34, 66, 300, 357, 83, 86, 260, 262, 24, 39, 141, 89, 299, 166, 192, 306, 302, 101, 72, 354, 353, 165, 327, 152, 335, 77, 33, 23, 271, 16, 231, 280, 54, 230, 114, 173, 132, 127, 126, 364, 268, 104, 270, 20, 255, 245, 0, 359, 67, 288, 188, 179, 295, 291, 308, 277, 22, 350, 310, 304, 365, 45, 389, 265, 347, 189, 111, 193, 70, 14, 297, 11, 184, 147, 215, 56, 296, 151, 108, 109, 18, 169, 281, 19, 257, 85, 256, 182, 324, 264, 366, 377, 332, 199, 202, 379, 208, 43, 396, 76, 333, 79, 275, 115, 345, 52, 128, 150, 394, 247, 301, 293, 311, 107, 172, 282, 252, 190, 298, 167, 30, 5, 331, 195, 263, 272, 187, 283, 103, 317, 170, 46, 26, 381, 253, 131, 274, 164, 47, 73, 385, 102, 232, 374, 378, 25, 219, 205, 393, 99, 88, 140, 41, 123, 35, 343, 90, 60, 368, 307, 284, 157, 186, 273, 37, 348, 386, 221, 98, 216, 209, 227, 226, 341, 303, 144, 321, 149, 106, 13, 322, 214, 207, 27, 197, 392, 328, 125, 201, 294, 320, 267, 286, 181, 92, 146, 161, 93, 222, 323, 57, 91, 360, 355, 361, 10, 61, 373, 220, 380, 118, 246, 6, 336, 145, 139, 62, 74, 138, 356, 204, 370, 254, 163, 64, 95, 135, 225, 78, 42, 330, 194, 63, 69, 8, 84, 249, 168, 133, 180, 372, 15, 51, 142, 59, 292, 124, 174, 81, 112, 82, 228, 68, 134, 29, 156, 242, 397, 40, 251, 36, 58, 7, 198, 148, 371, 244, 55, 203, 143, 94, 176, 266, 136, 388, 4, 110, 349, 233, 178, 12, 375, 159, 367, 240, 363, 100, 162, 258, 326, 31, 217, 338, 200, 9, 53, 250, 285, 387, 218, 206, 49, 185, 243, 32, 391, 329, 239, 117, 362, 339, 315, 279, 158, 313, 177, 334, 290, 316, 235, 346, 87, 113, 44, 342, 352, 71, 129, 65, 384};
+  permute_field(ce->Summary, 2000, permSummary, 400);
   
-  int permRuntime[80] = {1, 3, 0, 2};
-  permute_field(ce->Runtime, 80, permRuntime, 4);
-  char keyAspect[40] = "\x0c\x00\x49\x4b";
-  xor_field(ce->Aspect, 40, keyAspect, 4);
-  char keyComposer[300] = "\xf3\x6f\xbe\xbd\x7c\x69";
-  xor_field(ce->Composer, 300, keyComposer, 6);
-  int permAverage_Rating[3] = {0};
-  permute_field(ce->Average_Rating, 3, permAverage_Rating, 1);
+  int permBudget[80] = {0};
+  permute_field(ce->Budget, 80, permBudget, 1);
+  int permOpening_Weekend[80] = {3, 9, 14, 13, 2, 15, 8, 10, 5, 4, 7, 6, 11, 1, 0, 12};
+  permute_field(ce->Opening_Weekend, 80, permOpening_Weekend, 16);
+  int permGross[80] = {1, 0, 2, 3, 7, 9, 5, 6, 8, 4};
+  permute_field(ce->Gross, 80, permGross, 10);
+  char keyRuntime[80] = "\xa2\xc1\xcd\xfa\xbe\x1f\xa5\xf6\x2f\xf2\x14\x9d\x42\xbd\x58\x09\x9a\x2c\x4e\x72\x98\x7b\x03\xd8\x39\xe7\x3e\x04\xc4\xe3\x43\x42\xa1\x28\xaf\x64\xb1\x1a\x33\x1b\xe3\x0a\xf0\x72\x0e\x9c\x9a\xa2\x32\x99\xd4\x61\xba\xb5\x2e\x52\xb4\x89\x88\x13\x1e\x44\x32\x50\x59\x6a\xc6\x01\x5f\xa8\x45\x1a\xa4\x94\xc9\x3f\xd4\x32\x0d\x72";
+  xor_field(ce->Runtime, 80, keyRuntime, 80);
+  char keyAspect[40] = "\x67\xa1\x62\x71\x1c\x48\x8d\xb1\xcd\x74\xda\xe9\x47\x62\xe2\x07\x84\x58\x75\x6a";
+  xor_field(ce->Aspect, 40, keyAspect, 20);
+  
+  char keyAverage_Rating[3] = "\x26";
+  xor_field(ce->Average_Rating, 3, keyAverage_Rating, 1);
 }
 // Precondition: permLen | fieldLen
 void permute_field(char* field, const int fieldLen, const int* perm,
