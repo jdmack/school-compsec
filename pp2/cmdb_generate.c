@@ -1,190 +1,175 @@
 #include <stdlib.h>
 #include "cmdb_generate.h"
 #include "cmdb.h"
-void new_entry(struct cmdb_entry* ce)
-{
-    char tmp[2048];
-    int rd;
+void new_entry(struct cmdb_entry* ce){
+  char tmp[2048];
+  int rd;
+  puts("Title?\n");
+  rd = get_line(tmp,500);
+  memset(&(tmp[rd]),'\0',500-rd);
+  memcpy(&(ce->Title),tmp,500);
 
-    puts("Title?\n");
-    rd = get_line(tmp, 500);
-    //fprintf(stderr, "title: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 500 - rd);
-    memcpy(&(ce->Title), tmp, 500);
-    
-    puts("Director?\n");
-    rd = get_line(tmp, 300);
-    //fprintf(stderr, "director: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 300 - rd);
-    memcpy(&(ce->Director), tmp, 300);
-    
-    puts("Writer?\n");
-    rd = get_line(tmp, 300);
-    //fprintf(stderr, "writer: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 300 - rd);
-    memcpy(&(ce->Writer), tmp, 300);
+  puts("Director?\n");
+  rd = get_line(tmp,300);
+  memset(&(tmp[rd]),'\0',300-rd);
+  memcpy(&(ce->Director),tmp,300);
 
-    puts("Star_1?\n");
-    rd = get_line(tmp, 300);
-    //fprintf(stderr, "star1: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 300 - rd);
-    memcpy(&(ce->Star_1), tmp, 300);
+  puts("Writer?\n");
+  rd = get_line(tmp,300);
+  memset(&(tmp[rd]),'\0',300-rd);
+  memcpy(&(ce->Writer),tmp,300);
 
-    puts("Star_2?\n");
-    rd = get_line(tmp, 300);
-    //fprintf(stderr, "star2: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 300 - rd);
-    memcpy(&(ce->Star_2), tmp, 300);
+  puts("Star_1?\n");
+  rd = get_line(tmp,300);
+  memset(&(tmp[rd]),'\0',300-rd);
+  memcpy(&(ce->Star_1),tmp,300);
 
-    puts("Star_3?\n");
-    rd = get_line(tmp, 300);
-    //fprintf(stderr, "star3: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 300 - rd);
-    memcpy(&(ce->Star_3), tmp, 300);
+  puts("Star_2?\n");
+  rd = get_line(tmp,300);
+  memset(&(tmp[rd]),'\0',300-rd);
+  memcpy(&(ce->Star_2),tmp,300);
 
-    puts("Star_4?\n");
-    rd = get_line(tmp, 300);
-    //fprintf(stderr, "star4: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 300 - rd);
-    memcpy(&(ce->Star_4), tmp, 300);
+  puts("Star_3?\n");
+  rd = get_line(tmp,300);
+  memset(&(tmp[rd]),'\0',300-rd);
+  memcpy(&(ce->Star_3),tmp,300);
 
-    puts("Star_5?\n");
-    rd = get_line(tmp, 300);
-    //fprintf(stderr, "star5: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 300 - rd);
-    memcpy(&(ce->Star_5), tmp, 300);
+  puts("Star_4?\n");
+  rd = get_line(tmp,300);
+  memset(&(tmp[rd]),'\0',300-rd);
+  memcpy(&(ce->Star_4),tmp,300);
 
-    puts("Summary?\n");
-    rd = get_line(tmp, 2000);
-    //fprintf(stderr, "summary: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 2000 - rd);
-    memcpy(&(ce->Summary), tmp, 2000);
+  puts("Star_5?\n");
+  rd = get_line(tmp,300);
+  memset(&(tmp[rd]),'\0',300-rd);
+  memcpy(&(ce->Star_5),tmp,300);
 
-    puts("Country?\n");
-    rd = get_line(tmp, 30);
-    //fprintf(stderr, "country: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 30 - rd);
-    memcpy(&(ce->Country), tmp, 30);
+  puts("Summary?\n");
+  rd = get_line(tmp,2000);
+  memset(&(tmp[rd]),'\0',2000-rd);
+  memcpy(&(ce->Summary),tmp,2000);
 
-    puts("Budget?\n");
-    rd = get_line(tmp, 80);
-    //fprintf(stderr, "budget: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 80 - rd);
-    memcpy(&(ce->Budget), tmp, 80);
+  puts("Country?\n");
+  rd = get_line(tmp,30);
+  memset(&(tmp[rd]),'\0',30-rd);
+  memcpy(&(ce->Country),tmp,30);
 
-    puts("Opening_Weekend?\n");
-    rd = get_line(tmp, 80);
-    //fprintf(stderr, "opening_weekend: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 80 - rd);
-    memcpy(&(ce->Opening_Weekend), tmp, 80);
+  puts("Budget?\n");
+  rd = get_line(tmp,80);
+  memset(&(tmp[rd]),'\0',80-rd);
+  memcpy(&(ce->Budget),tmp,80);
 
-    puts("Gross?\n");
-    rd = get_line(tmp, 80);
-    //fprintf(stderr, "gross: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 80 - rd);
-    memcpy(&(ce->Gross), tmp, 80);
+  puts("Opening_Weekend?\n");
+  rd = get_line(tmp,80);
+  memset(&(tmp[rd]),'\0',80-rd);
+  memcpy(&(ce->Opening_Weekend),tmp,80);
 
-    puts("Runtime?\n");
-    rd = get_line(tmp, 80);
-    //fprintf(stderr, "runtime: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 80 - rd);
-    memcpy(&(ce->Runtime), tmp, 80);
+  puts("Gross?\n");
+  rd = get_line(tmp,80);
+  memset(&(tmp[rd]),'\0',80-rd);
+  memcpy(&(ce->Gross),tmp,80);
 
-    puts("Aspect?\n");
-    rd = get_line(tmp, 40);
-    //fprintf(stderr, "aspect: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 40 - rd);
-    memcpy(&(ce->Aspect), tmp, 40);
+  puts("Runtime?\n");
+  rd = get_line(tmp,80);
+  memset(&(tmp[rd]),'\0',80-rd);
+  memcpy(&(ce->Runtime),tmp,80);
 
-    puts("Composer?\n");
-    rd = get_line(tmp, 300);
-    //fprintf(stderr, "composer: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 300 - rd);
-    memcpy(&(ce->Composer), tmp, 300);
+  puts("Aspect?\n");
+  rd = get_line(tmp,40);
+  memset(&(tmp[rd]),'\0',40-rd);
+  memcpy(&(ce->Aspect),tmp,40);
 
-    puts("Average_Rating?\n");
-    rd = get_line(tmp, 3);
-    //fprintf(stderr, "average_rating: %d\n", rd);
-    memset(&(tmp[rd]), '\0', 3 - rd);
-    memcpy(&(ce->Average_Rating), tmp, 3);
+  puts("Composer?\n");
+  rd = get_line(tmp,300);
+  memset(&(tmp[rd]),'\0',300-rd);
+  memcpy(&(ce->Composer),tmp,300);
+
+  puts("Average_Rating?\n");
+  rd = get_line(tmp,3);
+  memset(&(tmp[rd]),'\0',3-rd);
+  memcpy(&(ce->Average_Rating),tmp,3);
+
+
   
-    char keyDirector[300] = "\x26\xf8\x2b\xff\x7b\x2d";
-    xor_field(ce->Director, 300, keyDirector, 6);
-  
-    char keyStar_2[300] = "\xe7\x1e\x90\xa1\x80\x93\xb5\x83\x3a\xe4";
-    xor_field(ce->Star_2, 300, keyStar_2, 10);
+  char keyDirector[300] = "\x49\xcc\x75\xd2\xd3\x25\xec\xd2\x3a\xc6";
+  xor_field(ce->Director, 300, keyDirector, 10);
 
-    int permStar_3[300] = {13, 1, 0, 12, 2, 11, 4, 10, 14, 5, 8, 6, 3, 7, 9};
-    permute_field(ce->Star_3, 300, permStar_3, 15);
-  
-  
-    int permSummary[2000] = {191, 59, 91, 88, 103, 109, 157, 119, 35, 38, 80, 107, 99, 153, 49, 143, 100, 33, 36, 42, 135, 44, 56, 169, 194, 28, 172, 186, 189, 19, 16, 112, 51, 165, 53, 156, 181, 144, 136, 177, 128, 126, 159, 120, 68, 176, 5, 15, 29, 84, 21, 8, 31, 166, 193, 93, 116, 179, 87, 140, 17, 146, 75, 89, 97, 134, 161, 67, 46, 55, 122, 12, 76, 86, 174, 163, 168, 34, 24, 150, 158, 45, 30, 32, 138, 82, 63, 184, 131, 39, 9, 198, 121, 3, 105, 43, 199, 18, 14, 81, 149, 164, 118, 23, 71, 178, 190, 187, 57, 78, 129, 151, 106, 73, 141, 61, 98, 11, 192, 69, 60, 182, 160, 173, 117, 58, 108, 83, 48, 27, 124, 102, 22, 185, 79, 170, 66, 96, 104, 41, 123, 40, 197, 132, 180, 111, 20, 85, 54, 148, 101, 137, 113, 7, 65, 47, 142, 26, 25, 183, 6, 114, 162, 175, 37, 70, 92, 74, 13, 94, 154, 155, 115, 64, 1, 10, 50, 95, 152, 62, 4, 0, 77, 196, 133, 130, 147, 188, 2, 127, 139, 167, 171, 145, 90, 125, 110, 52, 72, 195};
+  int permWriter[300] = {1, 2, 0};
+  permute_field(ce->Writer, 300, permWriter, 3);
 
-    permute_field(ce->Summary, 2000, permSummary, 200);
-  
-    char keyBudget[80] = "\x63\x51\x13\xbe";
-    xor_field(ce->Budget, 80, keyBudget, 4);
+  int permStar_1[300] = {4, 8, 9, 21, 24, 19, 0, 25, 15, 23, 12, 10, 14, 13, 1, 3, 20, 11, 2, 28, 22, 27, 6, 26, 16, 18, 5, 29, 7, 17};
+  permute_field(ce->Star_1, 300, permStar_1, 30);
 
-    char keyOpening_Weekend[80] = "\xd6\x22\x9a\x95\x9e\xb1\x65\xf5\x72\x1f\xd9\x2e\x71\x2e\x58\xae\xe8\x2e\x44\xe5\x44\xee\x5f\xd4\x86\xdc\x10\xd5\xe6\x70\x38\xac\xb0\x80\xd6\x79\x46\x96\x85\x0a\xac\x4f\x8c\xa9\xb7\x98\x2d\xab\x14\x1a\x8b\x26\x36\x1d\x3e\xb8\x4f\x21\xe5\xfe\xa3\xf7\xde\x26\xea\xdb\xe2\x67\xe0\xde\xca\xdc\x14\xbe\xa2\xff\x28\xd2\x8e\x14";
-    xor_field(ce->Opening_Weekend, 80, keyOpening_Weekend, 80);
+  int permStar_2[300] = {52, 39, 8, 58, 40, 17, 44, 50, 14, 22, 11, 12, 34, 31, 15, 42, 37, 13, 0, 36, 35, 30, 33, 26, 56, 7, 43, 38, 19, 28, 48, 49, 1, 4, 2, 23, 57, 25, 18, 53, 21, 9, 59, 54, 20, 6, 46, 27, 10, 5, 55, 51, 47, 24, 16, 3, 32, 41, 45, 29};
+  permute_field(ce->Star_2, 300, permStar_2, 60);
 
-    char keyGross[80] = "\xcf\x1e\x33\x4a\x8f\x26\xcd\x8d\x86\x8c\x4e\x76\x3f\x1f\xa6\xe3\x2d\xa9\x85\xdd";
-    xor_field(ce->Gross, 80, keyGross, 20);
-    char keyRuntime[80] = "\xfc\x8c\xc7\x03\xe3\x5a\xad\x30\x0c\x2d\x4d\x1c\xee\x37\xb1\x51\x75\x99\xed\x96";
-    xor_field(ce->Runtime, 80, keyRuntime, 20);
-    char keyAspect[40] = "\xf1\xcd";
-    xor_field(ce->Aspect, 40, keyAspect, 2);
-    char keyComposer[300] = "\xa0\x31\x7b\xd5\xfd\xd9\xbc\x27\x03\xb4\x83\xb7\xf1\xba\xe7";
-    xor_field(ce->Composer, 300, keyComposer, 15);
+  char keyStar_3[300] = "\xea\xa6\x08\xa6\x03\x99\x99\x65\x49\x2d\x4a\x83\x32\xad\x8b\xbb\xee\xb8\xde\xc1\xab\x2a\xee\x25\x34\xde\x02\xa0\x7b\x56\x61\x02\x33\x40\xe9\x1c\x5a\x78\x05\xb1\xf6\xa8\x67\xd7\xda\xc4\x03\xe7\x71\xfe";
+  xor_field(ce->Star_3, 300, keyStar_3, 50);
   
+  char keyStar_5[300] = "\x96\xd6\x5d\x36\x24\x8e\x8c\xa1\x35\x91\x68\x9c\xcd\x26\x3c\xe5\x82\x67\x03\x00\xf5\xdb\xfb\x62\x5f\x9d\x2d\xb0\x99\x0e\x33\x2b\xf4\xde\x88\x5f\x46\x75\xd3\x02\x03\xb4\xeb\x04\x3a\x3c\xe6\x28\x00\xa6\xce\xa9\x9c\x34\x51\x11\x01\x3f\xa2\x0f\x02\xd6\x1b\xec\xb0\x75\x85\x7b\x02\x01\x8e\x28\x82\xdf\xc6\xbb\xb8\x85\x1a\xff\x6a\xec\x6d\x33\x3e\x66\xde\x44\x62\x2d\xc8\x10\x58\x47\xac\x7b\x0e\x53\x9f\x12";
+  xor_field(ce->Star_5, 300, keyStar_5, 100);
+
+  char keySummary[2000] = "\x82\xfc\x5d\x9d\x5d\xc4\xfe\xe6\xa9\xb6\x98\x35\xfb\x02\x28\xe8\x9a\xc9\x64\x91\x86\x32\x02\x1d\x3c\xe0\xe7\x57\x1a\xaf\x73\x1a\xc6\x45\x55\xa3\x25\x09\xbd\xd0\x2c\xa2\x9c\x12\x2b\x25\x14\x7f\x7a\x96\x85\x9c\xd0\x7c\xa5\x4c\xdc\x36\x7d\x36\x62\x98\xd5\xe5\xbe\x30\x8e\xe3\x11\x03\xdb\x36\x01\xe9\xb5\xc9\x19\x8c\x64\x64";
+  xor_field(ce->Summary, 2000, keySummary, 80);
+
+  int permCountry[30] = {1, 0, 2};
+  permute_field(ce->Country, 30, permCountry, 3);
+
+  int permBudget[80] = {1, 0};
+  permute_field(ce->Budget, 80, permBudget, 2);
+
+  int permOpening_Weekend[80] = {6, 38, 0, 39, 20, 28, 25, 10, 24, 7, 31, 36, 29, 22, 13, 16, 19, 8, 35, 1, 34, 17, 26, 21, 14, 18, 2, 12, 27, 23, 4, 3, 9, 5, 11, 33, 15, 37, 32, 30};
+  permute_field(ce->Opening_Weekend, 80, permOpening_Weekend, 40);
+  
+  int permRuntime[80] = {1, 3, 0, 2};
+  permute_field(ce->Runtime, 80, permRuntime, 4);
+
+  char keyAspect[40] = "\x0c\x00\x49\x4b";
+  xor_field(ce->Aspect, 40, keyAspect, 4);
+
+  char keyComposer[300] = "\xf3\x6f\xbe\xbd\x7c\x69";
+  xor_field(ce->Composer, 300, keyComposer, 6);
+False
+  inm permAverage_Rating[3] = {0};
+  permute_field(ce->Average_Rating, 3, permAverage_Rating, 1);
 }
-
 // Precondition: permLen | fieldLen
-void permute_field(char* field, const int fieldLen, const int* perm, const int permLen)
-{
-    if(fieldLen % permLen != 0) {
-        fprintf(stderr, "Error: permutation length does not divide field length.");
+void permute_field(char* field, const int fieldLen, const int* perm,
+    const int permLen) {
+  if (fieldLen % permLen != 0) {
+    fprintf(stderr, "Error: permutation length does not divide field length.");
+  }
+  int index;  // Index in current field. 
+  int base;  // Base index of the current permutation. 
+  int permItr;  // Permutation iteration we're on. 
+  char* tmp = malloc(permLen);  // A temporary field for our permutation.
+  // For each time we are performing our permutation.
+  for (permItr = 0; permItr < fieldLen / permLen; permItr++) { 
+    base = permItr * permLen;  
+    // tmp[i] gets field[perm[i]].
+    for (index = 0; index < permLen; index++) {
+      tmp[index] = field[base + perm[index]];
     }
-
-    int index;  // Index in current field. 
-    int base;  // Base index of the current permutation. 
-    int permItr;  // Permutation iteration we're on. 
-    char* tmp = malloc(permLen);  // A temporary field for our permutation.
-
-    // For each time we are performing our permutation.
-    for(permItr = 0; permItr < fieldLen / permLen; permItr++) { 
-
-        base = permItr * permLen;  
-
-        // tmp[i] gets field[perm[i]].
-        for(index = 0; index < permLen; index++) {
-            tmp[index] = field[base + perm[index]];
-        }
-
-        // field[i] gets field[perm[i]].
-        for(index = 0; index < permLen; index++) {
-            field[base + index] = tmp[index];
-        }
+    // field[i] gets field[perm[i]].
+    for (index = 0; index < permLen; index++) {
+      field[base + index] = tmp[index];
     }
+  }
 }
 
-void xor_field(char* field, const int fieldLen, const char* key, const int keyLen)
-{
-    if(fieldLen % keyLen != 0) {
-        fprintf(stderr, "Error: key length does not divide field length.");
+void xor_field(char* field, const int fieldLen, const char* key,
+    const int keyLen) {
+  if (fieldLen % keyLen != 0) {
+    fprintf(stderr, "Error: key length does not divide field length.");
+  }
+  int index;  // Index in current field. 
+  int base;  // Base index of the current permutation. 
+  int keyItr;  // Key iteration we're on. 
+  // For each time we use the xor key. 
+  for (keyItr = 0; keyItr < fieldLen / keyLen; keyItr++) { 
+    base = keyItr * keyLen;  
+    for (index = 0; index < keyLen; index++) {
+      field[base + index] ^= key[index];
     }
-
-    int index;  // Index in current field. 
-    int base;  // Base index of the current permutation. 
-    int keyItr;  // Key iteration we're on. 
-
-    // For each time we use the xor key. 
-    for(keyItr = 0; keyItr < fieldLen / keyLen; keyItr++) { 
-
-        base = keyItr * keyLen;  
-
-        for(index = 0; index < keyLen; index++) {
-            field[base + index] ^= key[index];
-        }
-    }
+  }
 }
