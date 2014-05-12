@@ -13,7 +13,7 @@ import errno
 #                                                                             # 
 ###############################################################################
 
-LOCAL = True
+LOCAL = False
 DEBUG = False
 
 if LOCAL:
