@@ -1,0 +1,115 @@
+This attack is a heap spray attack containing shellcode and triggered by a standard buffer overflow
+vulnerability. There are four stages to this attacks. Setting up the NOP-sled and shellcode,
+duplicating this NOP-sled and shellcode many times, triggering the buffer overflow to redirect
+execution to the NOP-sled and shellcode and finally, using the initiated shell to acquire the target
+file.
+
+STAGE 1 - Creation of NOP-sled and shellcode and transmitting to target
+
+The 'cmdb_entry' struct will be the container for the NOP-sled with shellcode. It has 17 fields
+containing a total of 5293 bytes that is continuous in memory. Because the interface to the program
+has entering each field indivually and sending with pressing Enter, we create a string of NOPs for
+each field with X NOPs where X is the length of that particular field in bytes.
+
+This is complicated by the "encryption" used by the cmdb target. Certain fields are first modified
+with the "xor_field" and "permute_field" functions before copying the strings to the heap memory
+location. Therefore we need to perform the inverse operation to our string of NOPs before
+transmitting the data so that when the target program runs these functions on the data, it modifies
+them into becoming NOPs. 
+
+The following fields were modified with the "xor_field" function: Writer, Star_1, Star_3, Star_5, 
+Runtime, Aspect, Average_Rating. Because the inverse operation of an xor is just to xor them again,
+we created a simple C program with the xor_field function, copy the field keys from the target
+program and run the funciton on the fields. The details of this is that key has length X and is
+xor'ed against the field's data in chunks of X length. So in the exploit, we use the X long string
+of xor'ed NOPs and duplicate append it our string the appropriate number of times so that it is the
+full length of the actual field. Example is the Writer field which is 300 bytes in length and has a
+key size of 12 bytes. Therefore we take a string of 12 NOPs, xor it wtih the key and then duplicate
+that string 25 times to get a final string 300 bytes long that when processed by the target will be
+restored back to a string of 300 NOPs.
+
+Something to note is that in the field Runtime, the key contained two locations where xor'ing a 0x90
+NOP with that key byte results in 0x0a, which is the hex ASCII code for newline (\n). Because the
+target program is designed to either accept X characters for a field (where X is the field's size)
+or to stop if it encounters a newline, we need to treat this character differently so it does not
+interrupt inputting our movie fields and destroy our beautiful heap spray. The answer was to replace
+this NOP character and the NOP directly after it with a short jump of a single byte, 0xeb01, which
+will simply jump a single byte to the next NOP in sequence. When this is xor'ed it does not result
+in a newline and thus allows our code be fully inputted while retaining our NOP-sled's integrity.
+
+For permute_field, it operates by taking X length chunks of the data string and moving them around
+based on an input array of numbers. However, because all of the permuted fields contain only NOPs,
+it actually does not make any different in the field as it just replaces NOPs with NOPs. Had the
+Composer field ended up being permuted then this would not have been the case and we have had to run
+the inverse operation on that field to construct our shellcode.
+
+At the end of this NOP-sled we place the shellcode. The Composer field is the final field in the
+data structure (not true, Average_Rating is but since it's only 3 characters long, we ignore it and
+just place NOPs in there). The shellcode is 21 characters long and the Composer field is 300
+characters. Therefore we create a 279 character NOP string (300 - 21) and then append the shellcode
+string to the end of it to create our NOP-sled into shellcode.
+
+Once this is done, we have a 5269 byte NOP-sled that leads into the shellcode. When we connect to
+the target, we first select option 'a' to add a movie and then we transmit our movie field by field
+to the target. Now we have our NOP-sled with shellcode in the target's heap space and it has been
+corrected to be a perfect NOP-sled that when execution hits it, will slide execution down into our
+shellcode.
+
+STAGE 2 - Duplicating the cmdb_entry containing NOP-sled and shellcode
+
+Instead of "adding" this movie entry over and over again to spray the target's heap, there is a
+trick in the code to allow us to duplicate the existing entry with very few bytres transmitted. When
+a movie is reviewed in the cmdb target, it actually creates an entire copy of the movie being
+reviewed and only changes the last field Average_Rating with the new rating value supplied.
+Therefore, we can create up to MAX_ENTRIES (the maximum number of entries the cmdb target can store)
+by simply "reviewing" the one movie entry we added. To further streamline this, because the target
+finds the movie we are reviewing by comparing memory up to the string length of the movie title, we
+can actually send only three bytes to match the title of the movie created in Stage 1. We send
+0x90, 0x00 and a newline. It runs strlen on this and gets a length of 1 byte and compares only the
+first byte of each movie int he database. Because the title of the movie we sent is 300 NOP bytes,
+it matches positively against the first byte and finds the movie which should be stored in the first
+index of the ce_list array. Then we can send anything for the review, which we did chose to do 3
+NOPs just because that sounded cool.
+
+Thus in the exploit, after sending the movie, we do a loop making calls to the review function which
+will create a review by sending the 'r' command option, the title of 0x9000 and 0x909090 as the
+rating. When working locally, we are able to run this loop MAX_ENTRIES number of times to get the
+maximum size heap spray possible. However, when running the attack against the target server, we are
+limited by a 5 minute connection timeout which, combined wtih the latency to the server, limited us
+to around 8000 reviews.
+
+After completely these reviews, the target now has 8000 copies of our NOP-sled and shellcode in its
+memory.
+
+STAGE 3 - Triggering the buffer overflow to redirect execution to the heap spray
+
+In the delete function of the cmdb target, it reads the movie title into a 500 byte name_buffer.
+However, when it calls get_line to read in the movie title, it sends 5000 as the maximum number of
+bytes to read in, thus giving us ample space to overflow the saved eip in the cmd_delete()
+activation record. Using GDB, we determine that there are 28 bytes between the end of name_buffer
+and the location of the saved eip. Thus we create a string to pass in as the movie title and we
+filled it with 528 'k' characters ('k' because the hex ASCII code is 0x6B with 6 being my favorite
+number and B being my favorite letter in the range A-F and I used that when looking at the memory to
+track the distance from the name_buffer to the eip). Then after the 518 'k' characters, we place the
+address in the heap we want to redirect execution to.
+
+For choosing this address, we wrote a small C program that will malloc MAX_ENTRIES of cmdb_entry
+structs in memory. Then it subtracts the last address from the first address and adds half that
+value to the first address. The result is the approximate midpoint of the heap being used to store
+the cmdb_entries in the target program. The C program prints that string out and then I wrote a perl
+script that executes the C program lots of times, reads in the resulting address and performs some
+basic statistical analysis to determine what address value would be the "best guess". The address I
+eventually chose was 0x0945c008. This address is then appended to the movie title string.
+
+With the string setup, the exploit transmits the 'd' option to delete a movie, sends that title. It
+is unable to find the movie and then exits the delete function. When the function exits, it uses the
+heap address we entered as the saved eip and sends execution of the program to that address. Because
+that address is persumably in the heap, this will cause it to land somewhere in our huge NOP sled.
+It will then execute all the NOPs and end up executing the shellcode placed at the bottom of the
+sled.
+
+STAGE 4 - Using initated shell to retrieve target key file
+
+Our heap spray had about a 1 in 4 chance of landing. When it did, we are able to send commands to
+the server which are received by the shell initated by the exploit. A "ls" revealed the cmdb binary
+and the key file. A "cat key" command displays the key we needed. Copy paste and GG.
