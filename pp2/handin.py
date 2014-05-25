@@ -62,7 +62,7 @@ if inp == "Yes":
     time.sleep(1)
     os.system("tar -czvf "+dirname.strip()+".tar.gz "+dirname)
     print "Sending files..."
-    r = os.system("printf \"pp2handin\\nput "+dirname+".tar.gz\\n\" | ftp -v redemption.ucsd.edu | grep successfully")
+    r = os.system("printf \"pp2handin\\nput "+dirname+".tar.gz\\n\" | ftp -v -p redemption.ucsd.edu | grep successfully")
     if r != 0:
         print "\n****ERROR Occurred during FTP upload. Please check network connectivity before contacting a TA."
     else:

