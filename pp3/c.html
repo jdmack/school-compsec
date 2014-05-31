@@ -23,13 +23,12 @@
     
     <script>
   
-      var login_flag = false;
-      var redirect_flag = false;
+      var current_state = "INITIAL";
 
 
       function execute()
       {
-        login_flag = true;
+        current_state = "LOGIN";
 
         var username_textbox = document.getElementById("login_username");
         var input_textbox = document.getElementById("input_username");
@@ -41,13 +40,12 @@
 
       function iframe_onload()
       {
-        if(login_flag) {
-          login_flag = false;
-          redirect_flag = true;
+        if(current_state == "LOGIN") {
+          current_state = "REDIRECT";
           document.getElementById("submit_login").click();
         }
 
-        else if(redirect_flag) {
+        else if(current_state == "REDIRECT") {
           window.location.assign("http://zoobar.org/index.php");
         }
       }
